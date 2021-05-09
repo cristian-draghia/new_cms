@@ -24,6 +24,8 @@
 
 <!-- Blog Categories Well -->
 <div class="well">
+
+
     <?php 
 
     $query = 'SELECT * FROM categories';

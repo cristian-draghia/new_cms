@@ -76,6 +76,37 @@ function delete_post() {
   }
 }
 
+function delete_comment() {
+  global $connection;
+  if ( isset( $_GET['delete'] )) {
+    $delete_Comment_id = $_GET['delete'];
+
+    $get_post_id_query = "SELECT comment_post_id FROM comments WHERE comment_id = $delete_Comment_id";
+    $get_post_id_query_result = mysqli_query( $connection, $get_post_id_query );
+    confirm_query( $get_post_id_query_result );
+    
+    while ( $row = mysqli_fetch_assoc( $get_post_id_query_result ) ) {
+      $post_id = $row['comment_post_id'];
+      $decrese_comment_count_query = "UPDATE posts SET post_comment_count = post_comment_count - 1 WHERE post_id = $post_id";
+      $decrese_comment_count_query_result = mysqli_query( $connection, $decrese_comment_count_query );
+      confirm_query( $decrese_comment_count_query_result );
+
+
+    }
+
+    $delete_comment_query = "DELETE FROM comments WHERE comment_id = $delete_Comment_id";
+    $delete_comment_query_result = mysqli_query( $connection, $delete_comment_query );
+    confirm_query( $delete_comment_query_result );
+
+    $get_post_id_query = "SELECT comment_post_id FROM comments WHERE comment_id = $delete_Comment_id";
+
+
+    header("Location: comments.php");
+
+  }
+}
+
+
 function update_post( $post_id, $post_category_id, $post_title, $post_author, $post_image, $post_content, $post_tags, $post_status ) {
   global $connection;
   $query = "UPDATE posts SET ";
@@ -105,6 +136,25 @@ function test_empty_image($post_id, $post_image) {
     }
   }
   return $post_image;
+}
+
+
+function update_comment_status() {
+  global $connection;
+
+  if ( isset($_POST['comment_status_update']) && isset( $_GET['comment_id'] ) )  {
+
+    $comment_status = $_POST['comment_status_update'];
+    $comment_id = $_GET['comment_id'];
+    
+    $update_comment_status_query = "UPDATE comments SET comment_status = '$comment_status' WHERE  comment_id = $comment_id";
+    $update_comment_status_query_result = mysqli_query( $connection, $update_comment_status_query );
+    confirm_query( $update_comment_status_query_result );
+    header("Location: comments.php");
+    
+  }
+
+
 }
 
 

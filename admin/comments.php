@@ -15,7 +15,7 @@
                     <div class="col-lg-12">
 
                       <h1 class="page-header">
-                        Welcome to Posts
+                        Welcome to Comments
                         <small>Author</small>
                       </h1>
 
@@ -41,7 +41,7 @@
                           break;
                         
                         default:
-                          include 'includes/view_all_posts.php';
+                          include 'includes/view_all_comments.php';
                           break;
                       }
   

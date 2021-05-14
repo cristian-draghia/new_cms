@@ -15,7 +15,7 @@
 
                 <?php 
                 
-                $query_post = 'SELECT * FROM posts';
+                $query_post = "SELECT * FROM posts WHERE post_status = 'published' ";
 
                 $select_all_post_query = mysqli_query( $connection, $query_post );
 
@@ -52,7 +52,13 @@
     
 
 
-                <?php } ?>
+                <?php } 
+                
+                if ( mysqli_num_rows( $select_all_post_query ) == 0) {
+                    echo "<h1>No Posts Yet</h1>";
+                }
+
+                ?>
 
 
 

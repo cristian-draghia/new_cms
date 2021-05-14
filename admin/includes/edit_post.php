@@ -91,7 +91,23 @@ if ( isset( $_GET['post_id'] ) ) {
 
   <div class="form-group">
     <label for="post_status">Post Status</label>
-    <input type="text" value="<?php echo $post_status; ?>" class="form-control" name="post_status">
+    <select class="form-control" name="post_status" id="post_status">
+      <?php
+      //Get Post Status
+      $selected_status_query = "SELECT post_status FROM posts WHERE post_id = $post_id";
+      $selected_status_query_result = mysqli_query( $connection, $selected_status_query );
+      confirm_query( $selected_status_query_result );
+      while ( $row = mysqli_fetch_assoc( $selected_status_query_result ) ) {
+        $status_value = $row['post_status'];
+       
+          echo "<option ". (($status_value == 'draft') ? "selected" : "") . " value='draft'>Draft</option>";
+          echo "<option " . (($status_value == 'published') ? "selected" : "") . " value='published'>Published</option>"; 
+  
+      }
+      
+      ?>
+      
+        </select>
   </div>
 
   <div class="form-group">

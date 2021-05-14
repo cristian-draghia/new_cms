@@ -22,12 +22,12 @@
                 
                 $query_post = "SELECT * FROM posts WHERE post_category_id = $post_category_id";
 
-                $select_all_post_query = mysqli_query( $connection, $query_post );
+                $select_all_category_query = mysqli_query( $connection, $query_post );
 
-                if ( mysqli_num_rows( $select_all_post_query ) == 0) {
+                if ( mysqli_num_rows( $select_all_category_query ) == 0) {
                   echo "<h1>No Results</h1>";
                 } else {
-                  while ( $row = mysqli_fetch_assoc( $select_all_post_query )) {
+                  while ( $row = mysqli_fetch_assoc( $select_all_category_query )) {
                     $post_id = $row['post_id'];
                     $post_title = $row['post_title'];
                     $post_author = $row['post_author'];

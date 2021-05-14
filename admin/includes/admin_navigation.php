@@ -31,11 +31,10 @@
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
-                    <li>
+                    <li <?php if ( basename( get_included_files()[0] )  === 'index.php') echo "class='active'"; ?>>
                         <a href="index.php"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
- 
-                    <li>
+                    <li <?php if ( basename( get_included_files()[0] )  === 'posts.php') echo "class='active'"; ?>>
                         <a href="javascript:;" data-toggle="collapse" data-target="#posts_dropdown"><i class="fa fa-fw fa-arrows-v"></i> Posts <i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="posts_dropdown" class="collapse">
                             <li>
@@ -46,12 +45,12 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
+                    <li <?php if ( basename( get_included_files()[0] )  === 'categories.php') echo "class='active'"; ?>>
                         <a href="./categories.php"><i class="fa fa-fw fa-wrench"></i> Categories</a>
                     </li>
 
-                    <li class="active">
-                        <a href="blank-page.html"><i class="fa fa-fw fa-file"></i> Comments</a>
+                    <li <?php if ( basename( get_included_files()[0] )  === 'comments.php') echo "class='active'"; ?> >
+                        <a href="./comments.php"><i class="fa fa-fw fa-file"></i> Comments</a>
                     </li>
            
                     <li>

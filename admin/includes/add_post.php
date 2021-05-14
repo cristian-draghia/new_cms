@@ -13,15 +13,15 @@
     $post_tags  = $_POST['post_tags'];
     $post_content  = $_POST['post_content'];
     $post_data = date('d-m-y');
-    $post_comment_count = 4;
+    // $post_comment_count = 4;
 
 
     move_uploaded_file($post_image_temp, "../images/$post_image");
     
     $query = "INSERT INTO posts( post_category_id, post_title, post_author, post_date, ";
-    $query .= "post_image, post_content, post_tags, post_comment_count, post_status) ";
+    $query .= "post_image, post_content, post_tags, post_status) ";
     $query .= "VALUES('{$post_category_id}', '{$post_title}', '{$post_author}', ";
-    $query .= "now(), '{$post_image}', '{$post_content}', '{$post_tags}', '{$post_comment_count}', '{$post_status}')";
+    $query .= "now(), '{$post_image}', '{$post_content}', '{$post_tags}', '{$post_status}')";
 
     $create_post_query = mysqli_query($connection, $query);
 
@@ -73,7 +73,10 @@
 
   <div class="form-group">
     <label for="status">Post Status</label>
-    <input type="text" class="form-control" name="post_status">
+    <select class="form-control" name="post_status" id="post_status">
+      <option value='draft' selected>Draft</option>
+      <option value='published'>Published</option>
+    </select>
   </div>
 
   <div class="form-group">

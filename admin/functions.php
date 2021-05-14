@@ -1,5 +1,14 @@
 <?php
 
+function confirm_query($the_query) {
+  global $connection;
+  if ( !$the_query) {
+    die("Query Failed" . mysqli_error($connection));
+  }
+  
+}
+
+
 
 function insert_categories() {
   global $connection;
@@ -55,10 +64,48 @@ function delete_category() {
 
 }
 
+function delete_post() {
+  global $connection;
+  if ( isset( $_GET['delete'] ) ) {
+    $delete_post_id = $_GET['delete'];
 
+    $query = "DELETE FROM posts WHERE post_id = $delete_post_id";
+    $delete_query = mysqli_query($connection, $query);
+    confirm_query($delete_query);
+    header("Location: posts.php");
+  }
+}
 
+function update_post( $post_id, $post_category_id, $post_title, $post_author, $post_image, $post_content, $post_tags, $post_status ) {
+  global $connection;
+  $query = "UPDATE posts SET ";
+  $query .= "post_category_id = '$post_category_id', ";
+  $query .= "post_title = '{$post_title}', ";
+  $query .= "post_author = '{$post_author}', ";
+  $query .= "post_date = now(), ";
+  $query .= "post_image = '{$post_image}', ";
+  $query .= "post_content = '{$post_content}', ";
+  $query .= "post_tags = '{$post_tags}', ";
+  $query .= "post_status = '{$post_status}' ";
+  $query .= "WHERE post_id = {$post_id} ";    
 
+  $query_update_post = mysqli_query( $connection, $query );
+  confirm_query( $query_update_post );
+  header("Location: posts.php");
 
+}
+
+function test_empty_image($post_id, $post_image) {
+  global $connection;
+  if ( empty( $post_image )) {
+    $query = "SELECT * FROM posts WHERE post_id = {$post_id} ";
+    $query_select_image = mysqli_query( $connection, $query );
+    while ($row = mysqli_fetch_assoc( $query_select_image ) ) {
+      $post_image = $row['post_image'];
+    }
+  }
+  return $post_image;
+}
 
 
 ?>

@@ -22,6 +22,23 @@
 </div>
 
 
+<!-- Login Form -->
+<div class="well">
+    <h4>Login</h4>
+
+    <form action="includes/login.php" method='post'>
+    <div class="form-group">
+        <input class="form-control" type="text" name="user_name" placeholder="Enter username">
+    </div>
+    <div class="form-group">
+        <input class="form-control" type="password" name="user_password" placeholder="Enter password">
+    </div>
+    <div class="form-group">
+    <input type="submit" class="btn btn-primary" name="login_user" value="Login">
+  </div>
+    </form>
+</div>
+
 <!-- Blog Categories Well -->
 <div class="well">
 

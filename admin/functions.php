@@ -44,8 +44,8 @@ function find_all_categories() {
       echo "<tr>";
       echo "<td>{$cat_id}</td>";
       echo "<td>{$cat_title}</td>";
-      echo "<td><a href='categories.php?delete={$cat_id}'>DELETE</a></td>";
       echo "<td><a href='categories.php?edit={$cat_id}'>EDIT</a></td>"; 
+      echo "<td><a href='categories.php?delete={$cat_id}'>DELETE</a></td>";
       echo "</tr>";
   }
 
@@ -126,16 +126,47 @@ function update_post( $post_id, $post_category_id, $post_title, $post_author, $p
 
 }
 
-function test_empty_image($post_id, $post_image) {
+function update_post_category() {
   global $connection;
-  if ( empty( $post_image )) {
-    $query = "SELECT * FROM posts WHERE post_id = {$post_id} ";
-    $query_select_image = mysqli_query( $connection, $query );
-    while ($row = mysqli_fetch_assoc( $query_select_image ) ) {
-      $post_image = $row['post_image'];
+  if ( isset( $_POST['update_post_category'] ) && isset( $_GET['post_id'] ) ) {
+    $post_category = $_POST['update_post_category'];
+    $post_id = $_GET['post_id'];
+    
+    $update_post_category_query = "UPDATE posts SET post_category_id = '$post_category' WHERE  post_id = $post_id";
+    $update_post_category_query_result = mysqli_query( $connection, $update_post_category_query );
+    confirm_query( $update_post_category_query_result );
+    header("Location: posts.php");
+
+  }
+}
+
+function update_post_status() {
+  global $connection;
+  if ( isset( $_POST['post_status_update'] ) && isset( $_GET['post_id'] ) ) {
+    $post_status = $_POST['post_status_update'];
+    $post_id = $_GET['post_id'];
+    
+    $update_post_status_query = "UPDATE posts SET post_status = '$post_status' WHERE  post_id = $post_id";
+    $update_post_status_query_result = mysqli_query( $connection, $update_post_status_query );
+    confirm_query( $update_post_status_query_result );
+    header("Location: posts.php");
+
+  }
+
+}
+
+function test_empty_image($test_id, $test_image, $table) {
+  global $connection;
+  if ( empty( $image )) {
+    $current_id = substr($table, 0, -1) . '_id';
+    $current_image = substr($table, 0, -1) . '_image';
+    $update_same_image_query = "SELECT * FROM $table WHERE $current_id = $test_id";
+    $update_same_image_query_result = mysqli_query( $connection, $update_same_image_query );
+    while ($row = mysqli_fetch_assoc( $update_same_image_query_result ) ) {
+      $test_image = $row[$current_image];
     }
   }
-  return $post_image;
+  return $test_image;
 }
 
 
@@ -155,6 +186,51 @@ function update_comment_status() {
   }
 
 
+}
+
+function delete_user() {
+  global $connection;
+  if ( isset( $_GET['delete'] ) ) {
+    $delete_user_id = $_GET['delete'];
+
+    $delete_user_query = "DELETE FROM users WHERE user_id = $delete_user_id";
+    $delete_user_query_result = mysqli_query($connection, $delete_user_query);
+    confirm_query($delete_user_query_result);
+    header("Location: users.php");
+  }
+}
+
+function update_user_role() {
+  global $connection;
+  if ( isset( $_POST['updated_user_role'] ) && isset( $_GET['user_id'] ) ) {
+    $user_id = $_GET['user_id'];
+    $user_role = $_POST['updated_user_role'];
+    
+    $update_user_role_query = "UPDATE users SET user_role = '$user_role' WHERE  user_id = $user_id";
+    $update_user_role_query_result = mysqli_query( $connection, $update_user_role_query );
+    confirm_query( $update_user_role_query_result );
+    header("Location: users.php");
+
+  }
+
+}
+
+function update_user( $user_id, $user_name, $user_password, $user_firstname, $user_lastname, $user_email, $user_image, $user_role ) {
+  global $connection;
+  $update_user_data_query = "UPDATE users SET ";
+  $update_user_data_query .= "user_name = '$user_name', ";
+  $update_user_data_query .= "user_password = '$user_password', ";
+  $update_user_data_query .= "user_firstname = '$user_firstname', ";
+  $update_user_data_query .= "user_lastname = '$user_lastname', ";
+  $update_user_data_query .= "user_email = '$user_email', ";
+  $update_user_data_query .= "user_image = '$user_image', ";
+  $update_user_data_query .= "user_role = '$user_role' ";
+  $update_user_data_query .= "WHERE user_id = $user_id";  
+
+  $update_user_data_query_result = mysqli_query( $connection, $update_user_data_query );
+  confirm_query( $update_user_data_query_result );
+  header("Location: users.php");
+  
 }
 
 

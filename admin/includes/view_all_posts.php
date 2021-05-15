@@ -38,34 +38,44 @@
       echo "<td>$post_id</td>";
       echo "<td>$post_author</td>";
       echo "<td><a href='../post.php?post_id=$post_id'>$post_title</a></td>";
+      echo "<td>"; ?>
+
+      <form action="posts.php?post_id=<?php echo $post_id; ?>" method="post">
+      <select class="form-control" name="update_post_category" id="update_post_category" onchange='this.form.submit()'>
+      <?php
       //Display category
-      $query = "SELECT * FROM categories WHERE cat_id = {$post_category_id}";
+      $query = "SELECT * FROM categories";
       $select_categories_id = mysqli_query( $connection, $query );
       while ( $row = mysqli_fetch_assoc( $select_categories_id )) {
+        $cat_id = $row['cat_id'];
         $cat_title = $row['cat_title'];
+        if ( $cat_id == $post_category_id ) {
+          echo "<option selected='selected' value='$cat_id'>$cat_title</option>";
+        } else {
+          echo "<option value='$cat_id'>$cat_title</option>";
+        }
       }
-      echo "<td>$cat_title</td>";
+      ?>
+ 
+      </select>
+      </form>
+
+      <?php
+      echo "</td>";
       echo "<td>";?> 
 
       <form action="posts.php?post_id=<?php echo $post_id; ?>" method="post">
       <select class="form-control" name="post_status_update" id="post_status_update" onchange='this.form.submit()'>
       <?php
-      //Get Post Status
-      $selected_status_query = "SELECT post_status FROM posts WHERE post_id = $post_id";
-      $selected_status_query_result = mysqli_query( $connection, $selected_status_query );
-      confirm_query( $selected_status_query_result );
-      while ( $row = mysqli_fetch_assoc( $selected_status_query_result ) ) {
-        $status_value = $row['post_status'];
-
-        if ( $status_value == 'draft' ) {
-          echo "<option selected value='draft'>Draft</option>";
+        if ( $post_status == 'draft' ) {
+          echo "<option selected='selected' value='draft'>Draft</option>";
           echo "<option value='published'>Published</option>";
           
         } else {
           echo "<option value='draft'>Draft</option>";
-          echo "<option selected value='published'>Published</option>";
+          echo "<option selected='selected' value='published'>Published</option>";
         }
-      }
+      // }
       ?>
       
         </select>
@@ -91,20 +101,14 @@
       echo "</tr>";
 
     }
-
+    //Delete post
     delete_post();
+    //Update post status
+    update_post_status();
+    //Update post category
+    update_post_category();
 
 
-    if ( isset( $_POST['post_status_update'] ) && isset( $_GET['post_id'] ) ) {
-      $post_status = $_POST['post_status_update'];
-      $post_id = $_GET['post_id'];
-      
-      $update_post_status_query = "UPDATE posts SET post_status = '$post_status' WHERE  post_id = $post_id";
-      $update_post_status_query_result = mysqli_query( $connection, $update_post_status_query );
-      confirm_query( $update_post_status_query_result );
-      header("Location: posts.php");
-
-    }
 
     ?>
 

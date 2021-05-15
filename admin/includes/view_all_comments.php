@@ -18,10 +18,10 @@
 
 
     $query = 'SELECT * FROM comments';
-    $select_commentss = mysqli_query( $connection, $query );
+    $select_comments = mysqli_query( $connection, $query );
 
 
-    while ( $row = mysqli_fetch_assoc( $select_commentss )) {
+    while ( $row = mysqli_fetch_assoc( $select_comments )) {
       $comment_id = $row['comment_id'];
       $comment_post_id = $row['comment_post_id'];
       $comment_author = $row['comment_author'];

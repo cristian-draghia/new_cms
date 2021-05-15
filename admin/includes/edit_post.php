@@ -36,7 +36,7 @@ if ( isset( $_GET['post_id'] ) ) {
     move_uploaded_file($post_image_temp, "../images/$post_image");
 
     // Test if image is empy
-    $post_image = test_empty_image( $post_id, $post_image );
+    $post_image = test_empty_image( $post_id, $post_image, 'posts' );
 
     // Update Post
     update_post( $post_id, $post_category_id, $post_title, $post_author, $post_image, $post_content, $post_tags, $post_status );

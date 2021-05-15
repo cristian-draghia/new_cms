@@ -67,12 +67,12 @@
   </div>
 
   <div class="form-group">
-    <label for="author">Post Author</label>
+    <label for="post_author">Post Author</label>
     <input type="text" class="form-control" name="post_author">
   </div>
 
   <div class="form-group">
-    <label for="status">Post Status</label>
+    <label for="post_status">Post Status</label>
     <select class="form-control" name="post_status" id="post_status">
       <option value='draft' selected>Draft</option>
       <option value='published'>Published</option>
@@ -80,7 +80,7 @@
   </div>
 
   <div class="form-group">
-    <label for="image">Post Image</label>
+    <label for="post_image">Post Image</label>
     <input type="file" class="form-control" name="post_image">
   </div>
 

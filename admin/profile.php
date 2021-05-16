@@ -64,8 +64,7 @@
                     <div class="col-lg-12">
 
                       <h1 class="page-header">
-                        Welcome to Profile
-                        <small><?php echo $user_name; ?></small>
+                        Welcome to <?php echo $user_name; ?>'s' Profile
                       </h1>
 
 

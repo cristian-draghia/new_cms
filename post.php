@@ -50,10 +50,15 @@
                 <p><?php echo $post_content ?></p>
          
                 <hr>
+                <?php 
 
-    
+                if ( isset( $_SESSION['user_role'] ) && $_SESSION['user_role'] === 'administrator') {
+                    echo "<p class='btn btn-primary edit_button'><a href='admin/posts.php?source=edit_post&post_id=$post_id'>Edit Post</a></p>";
+                }
 
-
+                ?>
+                <hr>
+                
                 <?php } ?>
 
                 
@@ -66,21 +71,26 @@
                     $comment_content = $_POST['comment_content'];
                     $comment_email = $_POST['comment_email'];
 
-                    $insert_comment_query = "INSERT INTO ";
-                    $insert_comment_query .= "comments(comment_post_id, comment_author, comment_content, ";
-                    $insert_comment_query .= "comment_email, comment_status, comment_date) " ;
-                    $insert_comment_query .= "VALUES({$post_id}, '{$comment_author}', '{$comment_content}', ";
-                    $insert_comment_query .= "'{$comment_email}', 'unapprove', now())";
+                    if (!empty( $comment_author )  && !empty( $comment_email ) && !empty( $comment_content ) )  {
 
-                    $insert_comment_query_result = mysqli_query( $connection, $insert_comment_query );
+                        $insert_comment_query = "INSERT INTO ";
+                        $insert_comment_query .= "comments(comment_post_id, comment_author, comment_content, ";
+                        $insert_comment_query .= "comment_email, comment_status, comment_date) " ;
+                        $insert_comment_query .= "VALUES({$post_id}, '{$comment_author}', '{$comment_content}', ";
+                        $insert_comment_query .= "'{$comment_email}', 'unapprove', now())";
 
-                    confirm_query( $insert_comment_query_result );
+                        $insert_comment_query_result = mysqli_query( $connection, $insert_comment_query );
 
-                    $update_comment_count_query = "UPDATE posts SET post_comment_count = post_comment_count + 1 ";
-                    $update_comment_count_query .= "WHERE post_id = $post_id";
+                        confirm_query( $insert_comment_query_result );
 
-                    $update_comment_count_query_result = mysqli_query( $connection, $update_comment_count_query);
-                    confirm_query($update_comment_count_query_result);
+                        $update_comment_count_query = "UPDATE posts SET post_comment_count = post_comment_count + 1 ";
+                        $update_comment_count_query .= "WHERE post_id = $post_id";
+
+                        $update_comment_count_query_result = mysqli_query( $connection, $update_comment_count_query);
+                        confirm_query($update_comment_count_query_result);
+                    } else {
+                        echo "<script>alert('Fields cannot be empty')</script>";
+                    }
 
 
                     

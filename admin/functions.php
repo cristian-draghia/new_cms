@@ -122,7 +122,9 @@ function update_post( $post_id, $post_category_id, $post_title, $post_author, $p
 
   $query_update_post = mysqli_query( $connection, $query );
   confirm_query( $query_update_post );
-  header("Location: posts.php");
+  // header("Location: posts.php");
+  echo "<h3 class='bg-success'>Post has been updated.</h3>
+  <h4>Click <a href='../post.php?post_id=$post_id'>here</a> to view current post or <a href='./posts.php'>here</a> to view all posts.</h4>";
 
 }
 
@@ -157,7 +159,7 @@ function update_post_status() {
 
 function test_empty_image($test_id, $test_image, $table) {
   global $connection;
-  if ( empty( $image )) {
+  if ( empty( $test_image )) {
     $current_id = substr($table, 0, -1) . '_id';
     $current_image = substr($table, 0, -1) . '_image';
     $update_same_image_query = "SELECT * FROM $table WHERE $current_id = $test_id";

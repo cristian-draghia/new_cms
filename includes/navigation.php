@@ -26,12 +26,28 @@
 
                   }
                   
+                  //Admin Button
+                  if ( isset( $_SESSION['user_role'] ) && $_SESSION['user_role'] === 'administrator' ) {
+                      echo "<li><a href='admin'>Admin</a></li>";
+                  }
+
+                  //Edit Post Button
+                  if ( isset( $_SESSION['user_role'] ) && $_SESSION['user_role'] === 'administrator' && isset( $_GET['post_id'] ) )  {
+                    $post_id = $_GET['post_id'];
+                    echo "<li><a href='admin/posts.php?source=edit_post&post_id=$post_id'>Edit Post</a></li>";
+
+                }
                   
                   ?>
 
-                     <li>
-                        <a href="admin">Admin</a>
-                    </li>
+
+
+                    <?php
+
+             
+
+
+                    ?>
                     <!--<li>
                         <a href="#">Services</a>
                     </li>

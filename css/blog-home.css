@@ -11,3 +11,13 @@ body {
 footer {
     margin: 50px 0;
 }
+
+.login-button {
+    background-color: #337ab7;
+    color: white;
+}
+
+.edit_button a{
+    color: white;
+}
+

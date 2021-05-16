@@ -1,4 +1,5 @@
 <?php ob_start(); ?>
+<?php session_start(); ?>
 <?php include 'admin/functions.php' ?>
 
 <!DOCTYPE html>
@@ -18,7 +19,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="css/blog-home.css" rel="stylesheet">
+    <link href="css/blog-home.css?v=<?php echo time(); ?>" rel="stylesheet" type="text/css" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

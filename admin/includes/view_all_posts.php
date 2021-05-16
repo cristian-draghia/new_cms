@@ -87,13 +87,12 @@
       echo "<td>$post_tags</td>";
 
       //Total comments and approved comments
-      $query = "SELECT SUM(IF(comment_status = 'approved', 1, 0)) AS approved_comments FROM comments WHERE comment_post_id = $post_id";
+      $query = "SELECT * FROM comments WHERE comment_post_id = $post_id AND comment_status = 'approved'";
       $query_result = mysqli_query( $connection, $query );
       confirm_query( $query_result );
-      while ( $row = mysqli_fetch_assoc( $query_result ) ) {
-        $approved_comments = $row['approved_comments'];
-        echo "<td>$post_comment_count (" . ($approved_comments ? "$approved_comments" : "0") .  ")</td>";     
-      }      
+      $approved_comments = mysqli_num_rows( $query_result );
+      echo "<td>$post_comment_count (" . ($approved_comments ? "$approved_comments" : "0") .  ")</td>";     
+           
 
       echo "<td>$post_data</td>";
       echo "<td><a href='posts.php?source=edit_post&post_id={$post_id}'>Edit</a></td>";

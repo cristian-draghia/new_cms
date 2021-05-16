@@ -128,7 +128,7 @@ if ( isset( $_GET['post_id'] ) ) {
 
 
   <div class="form-group">
-    <input type="submit" class="btn-primary" name="update_post" value="Update Post">
+    <input type="submit" class="btn btn-primary" name="update_post" value="Update Post">
   </div>
 
 

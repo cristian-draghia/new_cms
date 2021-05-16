@@ -209,6 +209,9 @@ function update_user_role() {
     $update_user_role_query = "UPDATE users SET user_role = '$user_role' WHERE  user_id = $user_id";
     $update_user_role_query_result = mysqli_query( $connection, $update_user_role_query );
     confirm_query( $update_user_role_query_result );
+
+    $_SESSION['user_role'] = $user_role;
+
     header("Location: users.php");
 
   }
@@ -229,6 +232,15 @@ function update_user( $user_id, $user_name, $user_password, $user_firstname, $us
 
   $update_user_data_query_result = mysqli_query( $connection, $update_user_data_query );
   confirm_query( $update_user_data_query_result );
+
+  
+  $_SESSION['user_name'] = $user_name;
+  $_SESSION['user_firstname'] = $user_firstname;
+  $_SESSION['user_lastname'] = $user_lastname;
+  $_SESSION['user_role'] = $user_role;
+
+
+
   header("Location: users.php");
   
 }

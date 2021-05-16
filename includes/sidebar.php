@@ -34,7 +34,7 @@
         <input class="form-control" type="password" name="user_password" placeholder="Enter password">
     </div>
     <div class="form-group">
-    <input type="submit" class="btn btn-primary" name="login_user" value="Login">
+    <input class="form-control" type="submit" name="login_user" value="Login" style="background-color: #337ab7; color: white;">
   </div>
     </form>
 </div>

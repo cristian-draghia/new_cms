@@ -26,6 +26,7 @@
         $_SESSION['user_firstname'] = $db_user_firstname;
         $_SESSION['user_lastname'] = $db_user_lastname;
         $_SESSION['user_role'] = $db_user_role;
+        
   
         header("Location: ../admin");
 

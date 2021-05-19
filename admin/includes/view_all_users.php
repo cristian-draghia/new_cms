@@ -73,7 +73,7 @@
       <?php
       echo "</td>";
       echo "<td><a href='users.php?source=edit_user&user_id=$user_id'>Edit</a></td>";
-      echo "<td><a href='users.php?delete=$user_id'>Delete</a></td>";
+      echo "<td><a href='users.php?delete=$user_id' OnClick=\"return confirm( 'Are you sure you want to delete this user?' );\">Delete</a></td>";
       echo "</tr>";
 
     }

@@ -50,10 +50,15 @@
           while ( $row = mysqli_fetch_assoc( $selected_status_query_result ) ) {
             $status_value = $row['comment_status'];
 
-            echo "<option ". (($status_value == 'approved') ? "selected" : "") . " value='approved'>Approved</option>";
-            echo "<option " . (($status_value == 'unaproved') ? "selected" : "") . " value='unaproved'>Unaproved</option>"; 
+            if ( $status_value === 'approved' ) {
+              echo "<option selected='selected' value = 'approved'>Approved</option>";
+              echo "<option value = 'unapproved'>Unapproved</option>";
 
-
+            } else {
+              echo "<option value = 'approved'>Approved</option>";
+              echo "<option selected='selected' value = 'unapproved'>Unapproved</option>";
+            }
+          
           }
           
           ?>
@@ -70,11 +75,11 @@
       while ($row = mysqli_fetch_assoc( $select_post_id ) ) {
         $comment_post_title = $row['post_title'];
         $comment_post_id = $row['post_id'];
-        echo "<td><a href='../post.php?post_id={$comment_post_id}'>$comment_post_title</a></td>";
+        echo "<td><a href='../posts.php?post_id={$comment_post_id}'>$comment_post_title</a></td>";
       }
 
       echo "<td>$comment_date</td>";
-      echo "<td><a href='comments.php?delete={$comment_id}'>Delete</a></td>"; 
+      echo "<td><a href='comments.php?delete={$comment_id}' OnClick=\"return confirm( 'Are you sure you want to delete this comment?' );\">Delete</a></td>"; 
       echo "</tr>";
 
     }

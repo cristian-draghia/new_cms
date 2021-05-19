@@ -63,20 +63,23 @@ if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== '
 
     while ( $row = mysqli_fetch_assoc( $select_posts )) {
       $post_id = $row['post_id'];
-      $post_author = $row['post_author'];
+      $post_author_id = $row['post_author_id'];
+      $post_author_name = get_author_name( $post_author_id );
       $post_title = $row['post_title'];
       $post_category_id = $row['post_category_id'];
       $post_status = $row['post_status'];
       $post_image = $row['post_image'];
       $post_tags = $row['post_tags'];
-      $post_comment_count = $row['post_comment_count'];
+      $post_comments = get_post_comments_count( $post_id );
+      $post_comment_count = $post_comments[0];
+      $post_approved_comment_count = $post_comments[1];
       $post_data = $row['post_date'];
 
       echo "<tr>";
       echo "<td><input class='form-control check_box' type='checkbox' name='posts[]' value='$post_id'></td>";
       echo "<td>$post_id</td>";
-      echo "<td>$post_author</td>";
-      echo "<td><a href='../post.php?post_id=$post_id'>$post_title</a></td>";
+      echo "<td>$post_author_name</td>";
+      echo "<td><a href='../posts.php?post_id=$post_id'>$post_title</a></td>";
       echo "<td>"; ?>
 
       <form action="posts.php?post_id=<?php echo $post_id; ?>" method="post">
@@ -126,19 +129,16 @@ if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== '
       echo "<td>$post_tags</td>";
 
       //Total comments and approved comments
-      $query = "SELECT * FROM comments WHERE comment_post_id = $post_id AND comment_status = 'approved'";
-      $query_result = mysqli_query( $connection, $query );
-      confirm_query( $query_result );
-      $approved_comments = mysqli_num_rows( $query_result );
-      echo "<td>$post_comment_count (" . ($approved_comments ? "$approved_comments" : "0") .  ")</td>";     
+      echo "<td>$post_comment_count ($post_approved_comment_count)</td>";
            
 
       echo "<td>$post_data</td>";
       echo "<td><a href='posts.php?source=edit_post&post_id={$post_id}'>Edit</a></td>";
-      echo "<td><a href='posts.php?delete={$post_id}'>Delete</a></td>"; 
+      echo "<td><a href='posts.php?delete={$post_id}' OnClick=\"return confirm( 'Are you sure you want to delete this post?' );\">Delete</a></td>"; 
       echo "</tr>";
 
     }
+
     //Delete post
     delete_post();
     //Update post status

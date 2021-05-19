@@ -21,3 +21,15 @@ footer {
     color: white;
 }
 
+.error_message {
+    color: red;
+}
+
+.proper_message {
+    color: green;
+}
+
+.single-post {
+    margin-bottom: 50px;
+
+}

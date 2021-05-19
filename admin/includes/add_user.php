@@ -15,6 +15,10 @@
     $user_role = $_POST['user_role'];
 
     move_uploaded_file($user_image_temp, "../images/$post_image");
+
+    $randSalt = get_randSalt();
+
+    $user_password = crypt( $user_password, $randSalt );
     
     $add_user_query = "INSERT INTO users( user_name, user_password, user_firstname, ";
     $add_user_query .= "user_lastname, user_email, user_image, user_role) ";

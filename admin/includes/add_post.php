@@ -4,7 +4,7 @@
 
     $post_title  = $_POST['post_title'];
     $post_category_id  = $_POST['post_category_id'];
-    $post_author  = $_POST['post_author'];
+    $post_author_id  = $_SESSION['user_id'];
     $post_status  = $_POST['post_status'];
 
     $post_image  = $_FILES['post_image']['name'];
@@ -16,9 +16,9 @@
 
     move_uploaded_file($post_image_temp, "../images/$post_image");
     
-    $query = "INSERT INTO posts( post_category_id, post_title, post_author, post_date, ";
+    $query = "INSERT INTO posts( post_category_id, post_title, post_author_id, post_date, ";
     $query .= "post_image, post_content, post_tags, post_status) ";
-    $query .= "VALUES('{$post_category_id}', '{$post_title}', '{$post_author}', ";
+    $query .= "VALUES('{$post_category_id}', '{$post_title}', '{$post_author_id}', ";
     $query .= "now(), '{$post_image}', '{$post_content}', '{$post_tags}', '{$post_status}')";
 
     $create_post_query = mysqli_query($connection, $query);
@@ -28,7 +28,7 @@
     $post_id = mysqli_insert_id( $connection);
 
     echo "<h3 class='bg-success'>Post has been created.</h3>
-    <h4>Click <a href='../post.php?post_id=$post_id'>here</a> to view current post or <a href='./posts.php'>here</a> to view all posts.</h4>";
+    <h4>Click <a href='../posts.php?post_id=$post_id'>here</a> to view current post or <a href='./posts.php'>here</a> to view all posts.</h4>";
 
     // header("Location: posts.php");
 
@@ -67,11 +67,6 @@
     
     </select>
    
-  </div>
-
-  <div class="form-group">
-    <label for="post_author">Post Author</label>
-    <input type="text" class="form-control" name="post_author">
   </div>
 
   <div class="form-group">

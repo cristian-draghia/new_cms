@@ -1,4 +1,5 @@
 <?php include "db.php"; ?>
+<?php include '../admin/functions.php' ?>
 <?php session_start(); ?>
 
 <?php
@@ -20,12 +21,11 @@
       $db_user_lastname = $row['user_lastname'];
       $db_user_role = $row['user_role'];
 
+      $current_user_password = crypt( $current_user_password, $db_user_password );
+
       if ( $current_user_name === $db_user_name && $current_user_password === $db_user_password ) {
-        
-        $_SESSION['user_name'] = $db_user_name;
-        $_SESSION['user_firstname'] = $db_user_firstname;
-        $_SESSION['user_lastname'] = $db_user_lastname;
-        $_SESSION['user_role'] = $db_user_role;
+
+        set_new_session($db_user_id, $db_user_name, $db_user_firstname, $db_user_lastname, $db_user_role);
         
   
         header("Location: ../admin");

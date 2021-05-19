@@ -10,25 +10,32 @@
                 </button>
                 <a class="navbar-brand" href="./index.php">CMS Home Page</a>
             </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
+            
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
+                
 
                   <?php 
+                  //All postss button
+                  echo "<li><a href='posts.php'>All posts</a></li>";
 
-                  $query = 'SELECT * FROM categories';
-                  $select_all_categories_query = mysqli_query( $connection, $query );
+                  
+        
 
-                  while ( $row = mysqli_fetch_assoc( $select_all_categories_query )) {
-                    $cat_id = $row['cat_id']; 
-                    $cat_title = $row['cat_title'];
-                    echo "<li><a href='category.php?category_id=$cat_id'>{$cat_title}</a></li>";
+                  //Registration Button
+                  if ( !isset( $_SESSION['user_name'] ) ) {
+                    echo "<li><a href='registration.php'>Register</a></li>";
 
                   }
                   
                   //Admin Button
                   if ( isset( $_SESSION['user_role'] ) && $_SESSION['user_role'] === 'administrator' ) {
                       echo "<li><a href='admin'>Admin</a></li>";
+                  }
+
+                  //Log Out Button
+                  if ( isset( $_SESSION['user_role'] ) ) {
+                    echo "<li><a href='includes/logout.php'>Log out</a></li>";
                   }
 
                   //Edit Post Button
@@ -39,23 +46,6 @@
                 }
                   
                   ?>
-
-
-
-                    <?php
-
-             
-
-
-                    ?>
-                    <!--<li>
-                        <a href="#">Services</a>
-                    </li>
-                    <li>
-                        <a href="#">Contact</a>
-                    </li> -->
-
-
 
 
                 </ul>

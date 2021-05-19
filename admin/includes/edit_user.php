@@ -16,6 +16,8 @@ if ( isset( $_GET['user_id']) ) {
     $user_role = $row['user_role'];
     $user_image = $row['user_image'];
 
+
+
   }
 
   // move_uploaded_file($user_image_temp, "../images/$user_image");

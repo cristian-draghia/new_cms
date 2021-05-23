@@ -10,60 +10,50 @@
     $post_image  = $_FILES['post_image']['name'];
     $post_image_temp  = $_FILES['post_image']['tmp_name'];
 
-    $post_tags  = $_POST['post_tags'];
     $post_content  = $_POST['post_content'];
     $post_data = date('d-m-y');
 
-    move_uploaded_file($post_image_temp, "../images/$post_image");
-    
-    $query = "INSERT INTO posts( post_category_id, post_title, post_author_id, post_date, ";
-    $query .= "post_image, post_content, post_tags, post_status) ";
-    $query .= "VALUES('{$post_category_id}', '{$post_title}', '{$post_author_id}', ";
-    $query .= "now(), '{$post_image}', '{$post_content}', '{$post_tags}', '{$post_status}')";
+    if ( empty( $post_title ) && isset( $post_title ) ) {
+      echo "<h5 class='error_message'>The title cannot be empty</h5>";
+    } else {
 
-    $create_post_query = mysqli_query($connection, $query);
+      if ( !empty( $post_image ) ) {
+        move_uploaded_file($post_image_temp, "../images/$post_image");
+      } else {
+        $post_image = 'default_post.jpg';
+      }
+      
+      $query = "INSERT INTO posts( post_category_id, post_title, post_author_id, post_date, ";
+      $query .= "post_image, post_content, post_status) ";
+      $query .= "VALUES('{$post_category_id}', '{$post_title}', '{$post_author_id}', ";
+      $query .= "now(), '{$post_image}', '{$post_content}', '{$post_status}')";
 
-    confirm_query($create_post_query);
+      $create_post_query = mysqli_query($connection, $query);
 
-    $post_id = mysqli_insert_id( $connection);
+      confirm_query($create_post_query);
 
-    echo "<h3 class='bg-success'>Post has been created.</h3>
-    <h4>Click <a href='../posts.php?post_id=$post_id'>here</a> to view current post or <a href='./posts.php'>here</a> to view all posts.</h4>";
+      $post_id = mysqli_insert_id( $connection);
 
-    // header("Location: posts.php");
+      echo "<h3 class='bg-success'>Post has been created.</h3>
+      <h4>Click <a href='../posts.php?post_id=$post_id'>here</a> to view current post or <a href='./posts.php'>here</a> to view all posts.</h4>";
+    }
 
 
   }
 
 ?>
 
-
-
 <form action="" method="post" enctype="multipart/form-data">
   <div class="form-group">
-    <label for="title">Post Title</label>
+    <label for="title">Post Title *</label>
     <input type="text" class="form-control" name="post_title">
   </div>
 
   <div class="form-group">
-    <label for="post_category_id">Post Category ID</label>
+    <label for="post_category_id">Post Category</label>
     <select class="form-control" name="post_category_id" id="post_category_id">
 
-    <?php 
-    $query = 'SELECT * FROM categories';
-    $select_categories = mysqli_query( $connection, $query );
-
-    confirm_query($select_categories);
-  
-  
-    while ( $row = mysqli_fetch_assoc( $select_categories ) ) {
-      $cat_id = $row['cat_id'];
-      $cat_title = $row['cat_title'];
-      
-      echo "<option value='{$cat_id}'>{$cat_title}</option>";
-
-    }
-    ?>
+    <?php display_categories( $post_category_id ); ?>
     
     </select>
    
@@ -79,12 +69,7 @@
 
   <div class="form-group">
     <label for="post_image">Post Image</label>
-    <input type="file" class="form-control" name="post_image">
-  </div>
-
-  <div class="form-group">
-    <label for="post_tags">Post Tags</label>
-    <input type="text" class="form-control" name="post_tags">
+    <input type="file" name="post_image" id="post_image">
   </div>
 
   <div class="form-group">

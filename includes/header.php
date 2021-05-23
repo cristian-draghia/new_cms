@@ -1,6 +1,7 @@
 <?php ob_start(); ?>
 <?php session_start(); ?>
 <?php include 'admin/functions.php' ?>
+<?php $active_page = basename($_SERVER['PHP_SELF'], ".php"); ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,6 +21,11 @@
 
     <!-- Custom CSS -->
     <link href="css/blog-home.css?v=<?php echo time(); ?>" rel="stylesheet" type="text/css" />
+
+    <!-- Custom Fonts -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

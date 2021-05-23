@@ -29,8 +29,7 @@
       } else {
       
         $select_all_categories_query = "SELECT * FROM posts WHERE post_status = 'published' GROUP BY post_category_id ORDER BY post_category_id DESC";
-        $select_all_categories_query_result = mysqli_query( $connection, $select_all_categories_query );
-        confirm_query( $select_all_categories_query_result);
+        $select_all_categories_query_result = query_result( $select_all_categories_query );
 
         while ( $row = mysqli_fetch_assoc( $select_all_categories_query_result ) ) {
           $post_category_id = $row['post_category_id'];
@@ -44,10 +43,7 @@
         if ( mysqli_num_rows( $select_all_categories_query_result) == 0) {
           echo "<h1>No Categories Yet</h1>";  
         }
-
       }
-     
-      
       ?>
 
     </div>

@@ -1,34 +1,45 @@
 <?php
+
 if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== 'bulk_option' && isset( $_POST['posts'] ) ) {
   $bulk_option = $_POST['select_bulk_option'];
   $posts = $_POST['posts'];
-  foreach ($posts as $post_id) {
+  foreach ( $posts as $post_id ) {
     if ( $bulk_option === 'delete') {
-      $delete_posts_query = "DELETE FROM posts WHERE post_id = $post_id";
-      $delete_posts_query_result = mysqli_query( $connection, $delete_posts_query );
-      confirm_query( $delete_posts_query_result );
+      delete_query( 'posts', 'post_id', $post_id );
+      delete_post_comments( $post_id );
+    }
+    elseif( $bulk_option === 'duplicate') {
+      $post_array = get_post_info( $post_id );
+      $duplicate_query = "INSERT INTO ";
+      $duplicate_query .= "posts( post_category_id, post_title, post_author_id, post_date, post_image, post_content, post_status ) ";
+      $duplicate_query .= "VALUES( {$post_array['post_category_id']}, '{$post_array['post_title']}', {$post_array['post_author_id']}, ";
+      $duplicate_query .= "'{$post_array['post_date']}', '{$post_array['post_image']}', '{$post_array['post_content']}', '{$post_array['post_status']}' )";
+      $duplicate_query_result = query_result( $duplicate_query );
+    }
+    elseif ( $bulk_option === 'reset_views' ) {
+      $reset_views_query = "UPDATE posts SET post_views = 0 WHERE post_id = $post_id";
+      $reset_views_query_result = query_result( $reset_views_query );
     }
     else {
       $update_posts_query = "UPDATE posts SET post_status = '$bulk_option' WHERE post_id = $post_id";
-      $update_posts_query_result = mysqli_query( $connection, $update_posts_query );
-      confirm_query( $update_posts_query_result );
+      $update_posts_query_result = query_result( $update_posts_query );
     }
   }
     
 }
-
-
 ?>
 
 <form action="posts.php" method="post" >
 
 <div id="select_bulk_option" class="col-xs-4">
-<select class="form-control" name="select_bulk_option">
-  <option selected="selected" value="bulk_option">Bulk Option</option>  
-  <option value="published">Published</option>
-  <option value="draft">Draft</option>
-  <option value="delete">Delete</option>
-</select>
+  <select class="form-control" name="select_bulk_option">
+    <option selected="selected" value="bulk_option">Bulk Option</option>
+    <option value="duplicate">Duplicate</option>
+    <option value="published">Published</option>
+    <option value="draft">Draft</option>
+    <option value="reset_views">Reste Views</option>
+    <option value="delete">Delete</option>
+  </select>
 </div>
 
 <div class="col-xs-4 form-group">
@@ -40,17 +51,16 @@ if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== '
   <thead>
     <tr>
       <th><input class="form-control" type="checkbox" id="check_all_boxes" name="check_all_boxes"></th>
-      <th>Id</th>
       <th>Author</th>
       <th>Title</th>
       <th>Category</th>
       <th>Status</th>
       <th>Image</th>
-      <th>Tags</th>
       <th>Comments</th>
       <th>Date</th>
       <th>Edit</th>
       <th>Delete</th>
+      <th>Views</th>
     </tr>
   </thead>
   
@@ -58,100 +68,65 @@ if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== '
     <?php 
 
     $query = 'SELECT * FROM posts';
-    $select_posts = mysqli_query( $connection, $query );
-
-
+    $select_posts = query_result( $query );
+    
     while ( $row = mysqli_fetch_assoc( $select_posts )) {
       $post_id = $row['post_id'];
+      $post_category_id = $row['post_category_id'];
+      $post_category_name = get_post_category( $post_category_id );
+      $post_title = $row['post_title'];
       $post_author_id = $row['post_author_id'];
       $post_author_name = get_author_name( $post_author_id );
-      $post_title = $row['post_title'];
-      $post_category_id = $row['post_category_id'];
-      $post_status = $row['post_status'];
+      $post_date = $row['post_date'];
       $post_image = $row['post_image'];
-      $post_tags = $row['post_tags'];
+      $post_status = $row['post_status'];    
+      $post_views = $row['post_views'];
       $post_comments = get_post_comments_count( $post_id );
       $post_comment_count = $post_comments[0];
       $post_approved_comment_count = $post_comments[1];
-      $post_data = $row['post_date'];
 
       echo "<tr>";
       echo "<td><input class='form-control check_box' type='checkbox' name='posts[]' value='$post_id'></td>";
-      echo "<td>$post_id</td>";
+      echo "</form>";
       echo "<td>$post_author_name</td>";
       echo "<td><a href='../posts.php?post_id=$post_id'>$post_title</a></td>";
-      echo "<td>"; ?>
-
-      <form action="posts.php?post_id=<?php echo $post_id; ?>" method="post">
-      <select class="form-control" name="update_post_category" id="update_post_category" onchange='this.form.submit()'>
-      <?php
-      //Display category
-      $query = "SELECT * FROM categories";
-      $select_categories_id = mysqli_query( $connection, $query );
-      while ( $row = mysqli_fetch_assoc( $select_categories_id )) {
-        $cat_id = $row['cat_id'];
-        $cat_title = $row['cat_title'];
-        if ( $cat_id == $post_category_id ) {
-          echo "<option selected='selected' value='$cat_id'>$cat_title</option>";
-        } else {
-          echo "<option value='$cat_id'>$cat_title</option>";
-        }
-      }
+      echo "<td>$post_category_name</td>";
+      echo "<td>";
       ?>
- 
-      </select>
-      </form>
+      <form action="posts.php?post_id=<?php echo $post_id ?>" method="post" >
+        <select class="form-control" name="update_post_status" onchange='this.form.submit();'>
+        <?php
+          if ( $post_status === 'draft' ) {
+            echo "<option selected='selected' value='draft'>Draft</option>";
+            echo "<option value='published'>Published</option>";
+          } else {
+            echo "<option value='draft'>Draft</option>";
+            echo "<option selected='selected' value='published'>Published</option>";
 
-      <?php
-      echo "</td>";
-      echo "<td>";?> 
-
-      <form action="posts.php?post_id=<?php echo $post_id; ?>" method="post">
-      <select class="form-control" name="post_status_update" id="post_status_update" onchange='this.form.submit()'>
-      <?php
-        if ( $post_status == 'draft' ) {
-          echo "<option selected='selected' value='draft'>Draft</option>";
-          echo "<option value='published'>Published</option>";
-          
-        } else {
-          echo "<option value='draft'>Draft</option>";
-          echo "<option selected='selected' value='published'>Published</option>";
-        }
-      // }
-      ?>
-      
+          }
+        ?>
         </select>
       </form>
-      
-      <?php echo "</td>";
 
+      <?php
+      echo"</td>";
       echo "<td align='center'><img src='../images/$post_image' width=75px ></td>";
-      echo "<td>$post_tags</td>";
-
       //Total comments and approved comments
       echo "<td>$post_comment_count ($post_approved_comment_count)</td>";
-           
-
-      echo "<td>$post_data</td>";
+      echo "<td>$post_date</td>";
       echo "<td><a href='posts.php?source=edit_post&post_id={$post_id}'>Edit</a></td>";
       echo "<td><a href='posts.php?delete={$post_id}' OnClick=\"return confirm( 'Are you sure you want to delete this post?' );\">Delete</a></td>"; 
+      echo "<td>$post_views</td>";
       echo "</tr>";
 
     }
-
+    
     //Delete post
     delete_post();
     //Update post status
     update_post_status();
-    //Update post category
-    update_post_category();
-
-
-
     ?>
 
-
-    
   </tbody>
 </table>
 </form>

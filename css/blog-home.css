@@ -33,3 +33,12 @@ footer {
     margin-bottom: 50px;
 
 }
+
+.register-btn {
+    background-color: #222222;
+    color: #9d9d9d;
+}
+
+.register-btn:hover {
+    color: #ffffff !important;
+}

@@ -11,7 +11,7 @@
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
-                <li><a href="../index.php">HOME SITE</a></li>
+                <li><a href="../index.php"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
        
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> 
@@ -24,12 +24,12 @@
                      <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="./profile.php"><i class="fa fa-fw fa-user"></i> Profile</a>
+                            <a href="../account.php"><i class="fa fa-user" aria-hidden="true"></i> Profile</a>
                         </li>
          
                         <li class="divider"></li>
                         <li>
-                            <a href="../includes/logout.php"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                            <a href="../includes/logout.php"><i class="fa fa-sign-out" aria-hidden="true"></i> Log Out</a>
                         </li>
                     </ul>
                 </li>
@@ -39,10 +39,10 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li <?php if ( basename( get_included_files()[0] )  === 'index.php') echo "class='active'"; ?>>
-                        <a href="index.php"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        <a href="index.php"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a>
                     </li>
                     <li <?php if ( basename( get_included_files()[0] )  === 'posts.php') echo "class='active'"; ?>>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#posts_dropdown"><i class="fa fa-fw fa-arrows-v"></i> Posts <i class="fa fa-fw fa-caret-down"></i></a>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#posts_dropdown"><i class="fa fa-file-text" aria-hidden="true"></i> Posts <i class="fa fa-caret-down" aria-hidden="true"></i></a>
                         <ul id="posts_dropdown" class="collapse">
                             <li>
                                 <a href="./posts.php">Viw All Posts</a>
@@ -53,26 +53,23 @@
                         </ul>
                     </li>
                     <li <?php if ( basename( get_included_files()[0] )  === 'categories.php') echo "class='active'"; ?>>
-                        <a href="./categories.php"><i class="fa fa-fw fa-wrench"></i> Categories</a>
+                        <a href="./categories.php"><i class="fa fa-list" aria-hidden="true"></i> Categories</a>
                     </li>
 
                     <li <?php if ( basename( get_included_files()[0] )  === 'comments.php') echo "class='active'"; ?> >
-                        <a href="./comments.php"><i class="fa fa-fw fa-file"></i> Comments</a>
+                        <a href="./comments.php"><i class="fa fa-comments" aria-hidden="true"></i> Comments</a>
                     </li>
            
                     <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i>Users<i class="fa fa-fw fa-caret-down"></i></a>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-users" aria-hidden="true"></i> Users <i class="fa fa-caret-down" aria-hidden="true"></i></a>
                         <ul id="demo" class="collapse">
                             <li>
                                 <a href="./users.php">View All Users</a>
                             </li>
                             <li>
-                                <a href="./users.php?source=add_user">Add User</a>
+                                <a href="./users.php?source=add_user"> Add User </a>
                             </li>
                         </ul>
-                    </li>
-                    <li>
-                        <a href="./profile.php"><i class="fa fa-fw fa-dashboard"></i> Profile</a>
                     </li>
                 </ul>
             </div>

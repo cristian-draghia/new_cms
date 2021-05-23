@@ -226,3 +226,7 @@ ul.alert-dropdown {
 #select_bulk_option {
     padding: 0;
 }
+
+.error_message {
+    color: red;
+}

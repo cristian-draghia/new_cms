@@ -42,3 +42,8 @@ footer {
 .register-btn:hover {
     color: #ffffff !important;
 }
+
+.pager li .page-active {
+    background-color:#337ab7 !important;
+    color: #fff;
+}

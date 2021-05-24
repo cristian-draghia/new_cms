@@ -14,11 +14,24 @@
     <div class="col-md-8">
 
       <?php 
-
-        $select_all_posts_query = "SELECT * FROM posts WHERE post_status = 'published' ORDER BY post_id DESC";
-        display_posts($select_all_posts_query);
+        $count_posts_query = "SELECT * FROM posts WHERE post_status = 'published'";
+        $count_posts_query_result = query_result( $count_posts_query );
+        $count_posts = mysqli_num_rows( $count_posts_query_result );
+        $count_divider = 5;
+        $count_posts = ceil( $count_posts / $count_divider );
         
-      
+        if ( isset( $_GET['page'] ) ) {
+          $page_number = $_GET['page'];
+          $page_limit = ($page_number - 1) * $count_divider;
+          $select_all_posts_query = "SELECT * FROM posts WHERE post_status = 'published' ORDER BY post_id DESC ";
+          $select_all_posts_query .= "LIMIT $page_limit, $count_divider";
+          display_posts($select_all_posts_query);
+        } else {
+          $page_number = 1;
+          $select_all_posts_query = "SELECT * FROM posts WHERE post_status = 'published' ORDER BY post_id DESC ";
+          $select_all_posts_query .= "LIMIT $count_divider";
+          display_posts($select_all_posts_query);
+        }
       ?>
 
     </div>
@@ -28,6 +41,17 @@
 
   </div>
 
-  <hr>
+  <ul class="pager">
+    <?php
+    for( $i = 1; $i <= $count_posts; $i++ ) {
+      if ($i == $page_number ) {
+        echo "<li><a class='page-active' href='index.php?page=$i'>$i</a></li>";
+      } else {
+        echo "<li><a href='index.php?page=$i'>$i</a></li>";
+      }
+    }
+    ?>  
+  </ul>
+  
 
  <?php include 'includes/footer.php'; ?>

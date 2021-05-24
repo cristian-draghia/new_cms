@@ -67,7 +67,7 @@ if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== '
   <tbody>
     <?php 
 
-    $query = 'SELECT * FROM posts';
+    $query = 'SELECT * FROM posts ORDER BY post_id DESC';
     $select_posts = query_result( $query );
     
     while ( $row = mysqli_fetch_assoc( $select_posts )) {

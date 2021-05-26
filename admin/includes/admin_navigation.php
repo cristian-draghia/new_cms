@@ -11,6 +11,9 @@
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
+                <!-- <li><a href="users.php">Online Users: <?php echo users_online(); ?></a></li> -->
+                <li><a href="users.php">Online Users: <span class="users-online"></span></a></li>
+
                 <li><a href="../index.php"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
        
                 <li class="dropdown">

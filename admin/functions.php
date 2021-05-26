@@ -483,4 +483,40 @@ function leave_comment() {
     echo "<script>alert('The fields cannot be empty')</script>";
   }
 }
+
+function users_online() {
+
+  if( isset( $_GET['online_users'] ) ) {
+    global $connection;
+    if ( !$connection ) {
+      session_start();
+      include("../includes/db.php");
+    }
+    $session = session_id();
+    $time = time();
+    $time_out_in_seconds = 30;
+    $time_out = $time - $time_out_in_seconds;
+
+    $query = "SELECT * FROM users_online WHERE user_session = '$session'";
+    $query_result = query_result( $query );
+    $test_user = mysqli_num_rows( $query_result );
+
+    if ( $test_user == NULL ) {
+        $insert_query = "INSERT INTO users_online(user_session, user_time) VALUES('$session', $time)";
+        $insert_query_result = query_result( $insert_query );
+    } else {
+        $update_query = "UPDATE users_online SET user_time = $time WHERE user_session = '$session'";
+        $update_query_result = query_result( $update_query );
+
+    }
+    $users_online_query = "SELECT * FROM users_online WHERE user_time > $time_out";
+    $users_online_query_result = query_result( $users_online_query );
+    $count_users_online = mysqli_num_rows( $users_online_query_result );
+    echo $count_users_online;
+  
+  }
+}
+
+users_online();
+
 ?>

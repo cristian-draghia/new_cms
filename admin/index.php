@@ -2,9 +2,6 @@
 
     <div id="wrapper">
 
-
-
-
         <!-- Navigation -->
 
         <?php include 'includes/admin_navigation.php' ?>

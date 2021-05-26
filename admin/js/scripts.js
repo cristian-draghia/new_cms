@@ -31,3 +31,15 @@ $(document).ready(function() {
 
 
 });
+
+function load_users_online() {
+  $.get("functions.php?online_users=reuslt", function( data ) {
+    $(".users-online").text( data );
+  });
+}
+
+setInterval( function() {
+  load_users_online();
+}, 3000);
+
+load_users_online();

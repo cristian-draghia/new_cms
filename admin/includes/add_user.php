@@ -1,85 +1,82 @@
 <?php
 
-  if ( isset( $_POST['create_user'] ) ) {
+if ( isset( $_POST['register'] ) ) {
+  $user_name = escape_string( $_POST['user_name'] );
+  $user_email = escape_string( $_POST['user_email'] );
+  $user_password = escape_string( $_POST['user_password'] );
+  $user_password_confirm = escape_string( $_POST['user_password_confirm'] );
+  
+  $check_name = !empty($user_name) && strlen($user_name) > 3;
+  $check_email = !empty($user_email) && strlen($user_email) > 3;
+  $check_password = !empty($user_password) && strlen($user_password) > 3;
+  $check_password_confirm = !empty($user_password_confirm) && strlen($user_password_confirm) > 3;
 
+  if ( $check_name && $check_email && $check_password && $check_password_confirm ) {
 
-    $user_name = $_POST['user_name'];
-    $user_firstname = $_POST['user_firstname'];
-    $user_lastname = $_POST['user_lastname'];
-    $user_email = $_POST['user_email'];
-    $user_password = $_POST['user_password'];
+    $check_users_query = "SELECT user_name, user_email FROM users WHERE user_name = '$user_name' OR user_email = '$user_email'";
+    $check_users_query_result = query_result( $check_users_query );
 
-    $user_image  = $_FILES['user_image']['name'];
-    $user_image_temp  = $_FILES['user_image']['tmp_name'];
+    while ( $row = mysqli_fetch_array( $check_users_query_result ) ) {
+      if ( $user_name === $row['user_name'] ) {
+        $message = "This username already exists";
+        $message_state = "error";
+        break;
+      }
+      if ( $user_email === $row['user_email'] ) {
+        $message = "An account with this email has already been created";
+        $message_state = "error";
+        break;
+      }
+    }
 
-    $user_role = $_POST['user_role'];
+    if ( mysqli_num_rows( $check_users_query_result ) == 0 ) {
+      if ( $user_password !== $user_password_confirm ) {
+        $message = "The passwords has to be the same";
+        $message_state = "error";
+      } else {
+        $hash = password_hash($user_password, PASSWORD_BCRYPT);
+        $add_user_query = "INSERT INTO users (user_name, user_password, user_email, user_image, user_role) ";
+        $add_user_query .= "VALUES('$user_name', '$hash', '$user_email', 'default_user.jpg', 'subscriber')";
+        $add_user_query_result = mysqli_query( $connection, $add_user_query );
+        confirm_query( $add_user_query_result );
+        $message = "The user <span style='color:blue;'>$user_name</span> has just been created";
+        $message_state = "corret";
+      }
+        
+    }
 
-    move_uploaded_file($user_image_temp, "../images/$post_image");
-
-    $hash = password_hash($user_password, PASSWORD_BCRYPT);
-    
-    $add_user_query = "INSERT INTO users( user_name, user_password, user_firstname, ";
-    $add_user_query .= "user_lastname, user_email, user_image, user_role) ";
-    $add_user_query .= "VALUES('{$user_name}', '{$hash}', '{$user_firstname}', ";
-    $add_user_query .= "'{$user_lastname}', '{$user_email}', '{$user_image}', '{$user_role}')";
-
-    $add_user_query_result = mysqli_query($connection, $add_user_query);
-
-    confirm_query($add_user_query_result);
-
-    header("Location: users.php");
-
-
+  } else {
+    $message = "Fields cannot be empy or lower than 4 characters";
+    $message_state = "error";
   }
+       
+}
 
 ?>
 
 
 
-<form action="" method="post" enctype="multipart/form-data">
+<form role="form" action="" method="post" id="login-form" autocomplete="off">
+  <?php 
+  if ( !empty( $message ) && !empty( $message_state ) ) {
+    if ( $message_state === "error") {
+      echo "<h5 class='error_message'>$message</h5>";
+    } else {
+      echo "<h5 class='proper_message'>$message</h5>";
+    }
+  }
+  ?>
   <div class="form-group">
-    <label for="user_firstname">Firstname</label>
-    <input type="text" class="form-control" name="user_firstname">
+    <input type="text" name="user_name" id="username" class="form-control" placeholder="Username">
   </div>
-
   <div class="form-group">
-    <label for="user_lastname">Lastname</label>
-    <input type="text" class="form-control" name="user_lastname">
+    <input type="email" name="user_email" id="email" class="form-control" placeholder="Email">
   </div>
-
   <div class="form-group">
-    <label for="user_name">Username</label>
-    <input type="text" class="form-control" name="user_name">
+    <input type="password" name="user_password" id="password" class="form-control" placeholder="Password">
   </div>
-
   <div class="form-group">
-    <label for="user_email">Email</label>
-    <input type="email" class="form-control" name="user_email">
+    <input type="password" name="user_password_confirm" id="password_confirm" class="form-control" placeholder="Confirm Password">
   </div>
-
-  <form action="" method="post" enctype="multipart/form-data">
-  <div class="form-group">
-    <label for="user_password">Password</label>
-    <input type="password" class="form-control" name="user_password">
-  </div>
-
-  <div class="form-group">
-    <label for="user_image">Image</label>
-    <input type="file" class="form-control" name="user_image">
-  </div>
-
-  <div class="form-group">
-    <label for="user_role">Role</label>
-    <select class="form-control" name="user_role" id="user_role">
-      <option selected="selected" value='subscriber'>Subscriber</option>
-      <option value='administrator'>Administrator</option>
-    </select>
-  </div>
-
-
-  <div class="form-group">
-    <input type="submit" class="btn-primary" name="create_user" value="Add New User">
-  </div>
-
-
+  <input type="submit" name="register" id="btn-login" class="btn btn-custom btn-lg btn-block register-btn" value="Register">
 </form>

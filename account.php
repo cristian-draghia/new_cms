@@ -46,7 +46,9 @@ if ( isset( $_POST['update_user'] ) ) {
   $post_image = test_empty_image( $user_id, $new_user_image, 'users' );
 
   //Write error messages
-  $messages = array();
+  if ( empty( $messages ) ) {
+    $messages = array();
+  }
   
   update_user_name_email( $user_id, $user_name, $new_user_name, 'user_name', $messages);
   update_user_name_email( $user_id, $user_email, $new_user_email, 'user_email', $messages);
@@ -79,14 +81,7 @@ if ( isset( $_POST['update_user'] ) ) {
     }
   }
   
-  if ( !empty ( $messages ) ) {
-    $_SESSION['message'] = $messages;
-    $_SESSION['time'] = time();
-  }
-
-  header( "Location: account.php?user_id=$user_id");
-
-  
+  // header( "Location: account.php?user_id=$user_id");
 
 }
 
@@ -103,16 +98,10 @@ if ( isset( $_POST['update_user'] ) ) {
             <h1 class="text-center">Settings</h1>
               <form role="form" action="" method="post" id="update_user_form" autocomplete="off" enctype="multipart/form-data">
                 <?php 
-                  if ( !empty($_SESSION['message']) ) {
-                    foreach ( $_SESSION['message'] as $message) {
+                  if ( !empty($messages) ) {
+                    foreach ( $messages as $message) {
                       echo "<h5 class='error_message'>$message</h5>";
                     }
-                    if ( time() - $_SESSION['time'] > 0.1) {
-                      unset( $_SESSION["message"] );
-                      unset( $_SESSION["time"] );
-                      header( "Location: account.php?user_id=$user_id");
-                                   
-                  }
                 }
                 ?>
                 <div class="form-group">

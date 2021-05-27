@@ -1,13 +1,12 @@
 <?php
 
 //Get default values for edit
-if ( isset( $_GET['user_id']) ) {
+if ( isset( $_GET['user_id'] ) ) {
+  
   $user_id = $_GET['user_id'];
-
-  $select_user_data_query = "SELECT * FROM users WHERE user_id = $user_id";
-  $select_user_data_query_result = mysqli_query( $connection, $select_user_data_query );
-  confirm_query( $select_user_data_query_result );
-  while ( $row = mysqli_fetch_assoc( $select_user_data_query_result  ) ) {
+  $user_info_query = "SELECT * FROM users WHERE user_id = $user_id";
+  $user_info_query_result = query_result( $user_info_query );
+  while ( $row = mysqli_fetch_assoc( $user_info_query_result ) ) {
     $user_name = $row['user_name'];
     $user_password = $row['user_password'];
     $user_firstname = $row['user_firstname'];
@@ -15,137 +14,106 @@ if ( isset( $_GET['user_id']) ) {
     $user_email = $row['user_email'];
     $user_role = $row['user_role'];
     $user_image = $row['user_image'];
-
-
-
   }
+}
 
-  // move_uploaded_file($user_image_temp, "../images/$user_image");
+if ( isset( $_POST['update_user'] ) ) {
+  $new_user_name = escape_string( $_POST['user_name'] );
+  $new_user_firstname = escape_string( $_POST['user_firstname'] );
+  $new_user_lastname = escape_string( $_POST['user_lastname'] );
+  $new_user_email = escape_string( $_POST['user_email'] );
 
-  
-  // $user_image = test_empty_image( $user_id, $user_image );
+  $new_user_image  = $_FILES['user_image']['name'];
+  $new_user_image_temp  = $_FILES['user_image']['tmp_name'];
 
-  if ( isset( $_POST['update_user'] ) ) {
+  move_uploaded_file($new_user_image_temp, "images/$new_user_image");
 
-    
-    $user_firstname = $_POST['user_firstname'];
-    $user_lastname = $_POST['user_lastname'];
-    $user_name = $_POST['user_name'];
-    $user_email = $_POST['user_email'];
-    $user_password = $_POST['user_password'];
+  // Test if image is empy
+  $post_image = test_empty_image( $user_id, $new_user_image, 'users' );
 
-    $user_image  = $_FILES['user_image']['name'];
-    $user_image_temp  = $_FILES['user_image']['tmp_name'];
-
-    $user_role = $_POST['user_role'];
-
-    move_uploaded_file($user_image_temp, "../images/$user_image");
-
-    // Test if image is empy
-    $user_image = test_empty_image( $user_id, $user_image, 'users' );
-
-    // Update User
-    update_user( $user_id, $user_name, $user_password, $user_firstname, $user_lastname, $user_email, $user_image, $user_role );
-  
+  //Write error messages
+  if ( empty( $messages ) ) {
+    $messages = array();
   }
   
+  update_user_name_email( $user_id, $user_name, $new_user_name, 'user_name', $messages);
+  update_user_name_email( $user_id, $user_email, $new_user_email, 'user_email', $messages);
+  update_user_info( $user_id, $user_firstname, $new_user_firstname, 'user_firstname');
+  update_user_info( $user_id, $user_lastname, $new_user_lastname, 'user_lastname');
+  if ( !empty( $new_user_image ) ) {
+    update_user_info( $user_id, $user_image, $new_user_image, 'user_image');
+  } 
 
+  //Update Password
+  if ( !empty( $_POST['user_old_password'] ) && !empty( $_POST['user_new_password'] ) && !empty( $_POST['user_confirm_password'] ) ) {
+    $user_old_password = escape_string( $_POST['user_old_password'] );
+    $user_new_password = escape_string( $_POST['user_new_password'] );
+    $user_confirm_password = escape_string( $_POST['user_confirm_password'] );
+    $verify = password_verify($user_old_password , $user_password);
+    if ( $verify ) {
+      if ($user_old_password === $user_new_password && $user_old_password === $user_confirm_password) {
+        array_push( $messages, "The new password cannot be the old password");
+      }
+      if ( $user_new_password !== $user_confirm_password ) {
+        array_push( $messages, "The new password and the confirm password don't match");
+      } else {
+        $hash = password_hash($user_new_password, PASSWORD_BCRYPT);
+        $update_user_password_query = "UPDATE users SET user_password = '$hash' WHERE user_id = $user_id";
+        $update_user_password_query_result = mysqli_query( $connection, $update_user_password_query );
+        confirm_query( $update_user_password_query_result );
+      }
+    } else {
+      array_push( $messages, "The old password is wrong");
+    }
+  }
+  
+  // header( "Location: account.php?user_id=$user_id");
 
 }
 
 
-
-
-
-
-  if ( isset( $_POST['create_user'] ) ) {
-
-
-    $user_name = $_POST['user_name'];
-    $user_firstname = $_POST['user_firstname'];
-    $user_lastname = $_POST['user_lastname'];
-    $user_email = $_POST['user_email'];
-    $user_password = $_POST['user_password'];
-
-    $user_image  = $_FILES['user_image']['name'];
-    $user_image_temp  = $_FILES['user_image']['tmp_name'];
-
-    $user_role = $_POST['user_role'];
-
-    move_uploaded_file($user_image_temp, "../images/$post_image");
-    
-    $add_user_query = "INSERT INTO users( user_name, user_password, user_firstname, ";
-    $add_user_query .= "user_lastname, user_email, user_image, user_role) ";
-    $add_user_query .= "VALUES('{$user_name}', '{$user_password}', '{$user_firstname}', ";
-    $add_user_query .= "'{$user_lastname}', '{$user_email}', '{$user_image}', '{$user_role}')";
-
-    $add_user_query_result = mysqli_query($connection, $add_user_query);
-
-    confirm_query($add_user_query_result);
-
-    header("Location: users.php");
-
-
-  }
-
 ?>
 
-
-
-
-<form action="" method="post" enctype="multipart/form-data">
-  <div class="form-group">
-    <label for="user_firstname">Firstname</label>
-    <input type="text" class="form-control" name="user_firstname" value="<?php echo $user_firstname; ?>">
-  </div>
-
-  <div class="form-group">
-    <label for="user_lastname">Lastname</label>
-    <input type="text" class="form-control" name="user_lastname" value="<?php echo $user_lastname; ?>">
-  </div>
-
+<form role="form" action="" method="post" id="update_user_form" autocomplete="off" enctype="multipart/form-data">
+  <?php 
+    if ( !empty($messages) ) {
+      foreach ( $messages as $message) {
+        echo "<h5 class='error_message'>$message</h5>";
+      }
+  }
+  ?>
   <div class="form-group">
     <label for="user_name">Username</label>
-    <input type="text" class="form-control" name="user_name" value="<?php echo $user_name; ?>">
+    <input type="text" name="user_name" id="user_name" class="form-control" value = "<?php echo $user_name; ?>">
   </div>
-
+  <div class="form-group">
+    <label for="user_firstname">First Name</label>
+    <input type="text" name="user_firstname" id="user_firstname" class="form-control" value = "<?php echo $user_firstname; ?>">
+  </div>
+  <div class="form-group">
+    <label for="user_lastname">Last Name</label>
+    <input type="text" name="user_lastname" id="user_lastname" class="form-control" value = "<?php echo $user_lastname; ?>">
+  </div>
   <div class="form-group">
     <label for="user_email">Email</label>
-    <input type="email" class="form-control" name="user_email" value="<?php echo $user_email; ?>">
-  </div>
-
-  <form action="" method="post" enctype="multipart/form-data">
+    <input type="email" name="user_email" id="user_email" class="form-control" value = "<?php echo $user_email; ?>">
+  </div>        
   <div class="form-group">
-    <label for="user_password">Password</label>
-    <input type="password" class="form-control" name="user_password" value="<?php echo $user_password; ?>">
+    <label for="user_image">Avatar</label><br>
+    <img src="images/<?php echo $user_image; ?>" height=150>
+    <input type="file" name="user_image" id="user_image">
   </div>
-
   <div class="form-group">
-    <label for="user_image">Image</label><br>
-    <img width="100" src="../images/<?php echo $user_image;?>">
-    <input type="file" class="form-control" name="user_image">
+    <label for="user_old_password">Old password</label>
+    <input type="password" name="user_old_password" id="user_old_password" class="form-control">
   </div>
-
   <div class="form-group">
-    <label for="user_role">Role</label>
-    <select class="form-control" name="user_role" id="user_role">
-      <?php 
-      if ( $user_role == 'administrator' ) {
-        echo "<option value='subscriber'>Subscriber</option>";
-        echo "<option selected='selected' value='administrator'>Administrator</option>";
-      }
-      else {
-        echo "<option selected='selected' value='subscriber'>Subscriber</option>";
-        echo "<option value='administrator'>Administrator</option>";
-      }
-      ?>"
-    </select>
+    <label for="user_new_password">New password</label>
+    <input type="password" name="user_new_password" id="user_new_password" class="form-control">
   </div>
-
-
   <div class="form-group">
-    <input type="submit" class="btn btn-primary" name="update_user" value="Update User">
+    <label for="user_confirm_password">Confirm password</label>
+    <input type="password" name="user_confirm_password" id="user_confirm_password" class="form-control">
   </div>
-
-
+    <input type="submit" name="update_user" id="btn-login" class="btn btn-custom btn-lg btn-block register-btn" value="Save changes">
 </form>

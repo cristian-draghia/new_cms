@@ -34,17 +34,13 @@ if ( isset( $_POST['login'] ) ) {
 
     header("Location: admin/index.php");
     } else {     
-      $_SESSION['message'] = "The password is wrong";
-      $_SESSION['time'] = time();
-      header("Location: login.php");
+      $message = "The password is wrong";
     }
 
   }
 
   if ( mysqli_num_rows( $select_all_users_query_result ) == 0) {
-    $_SESSION['message'] = "The username or email doesn't exist";
-    $_SESSION['time'] = time();
-    header("Location: login.php");
+    $message = "The username or email doesn't exist";
   }
 }
 
@@ -61,14 +57,10 @@ if ( isset( $_POST['login'] ) ) {
             <h1 class="text-center">Login</h1>
               <form role="form" action="login.php" method="post" id="login-form" autocomplete="off">
                 <?php 
-                  if ( !empty($_SESSION['message']) ) {
-                    echo "<h5 class='error_message'>" . $_SESSION['message'] . "</h5>";
-                    if ( time() - $_SESSION['time'] > 0.1) {
-                      unset( $_SESSION["message"] );
-                      unset( $_SESSION["time"] );
-                      header("Location: login.php");
-                    }
+                  if ( !empty($message) ) {
+                    echo "<h5 class='error_message'>$message</h5>";
                   }
+       
                 ?>
                 <div class="form-group">
                   <input type="text" name="user_name" id="username" class="form-control" placeholder="Username or Email">

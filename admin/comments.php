@@ -31,10 +31,14 @@
                         $source = '';
                       }
 
+                      if ( isset( $_GET['post_id'] ) ) {
+                        $source = 'comment';
+                      }
+
                       switch ($source) {
-                        // case 'add_post':
-                        //   include 'includes/add_post.php';
-                        //   break;
+                        case 'comment':
+                          include 'includes/view_post_comments.php';
+                          break;
                         
                         // case 'edit_post':
                         //   include 'includes/edit_post.php';
@@ -44,6 +48,9 @@
                           include 'includes/view_all_comments.php';
                           break;
                       }
+
+                    
+
   
                       
                 

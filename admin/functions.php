@@ -93,7 +93,7 @@ function delete_query( $table, $column, $value ) {
 
 function delete_category() {
   global $connection;
-  if( isset( $_GET['delete'] )) {
+  if( isset( $_GET['delete'] ) && $_SESSION['user_role'] === 'administrator'  ) {
     $cat_id = $_GET['delete'];
     delete_query( 'categories', 'cat_id', $cat_id );
     $select_all_posts_query = "SELECT * FROM posts WHERE post_category_id = $cat_id";
@@ -109,7 +109,7 @@ function delete_category() {
 
 function delete_post() {
   global $connection;
-  if ( isset( $_GET['delete'] ) ) {
+  if ( isset( $_GET['delete'] ) && $_SESSION['user_role'] === 'administrator'  ) {
     $post_id = $_GET['delete'];
     delete_query( 'posts', 'post_id', $post_id );
     delete_post_comments( $post_id );
@@ -129,7 +129,7 @@ function delete_post_comments( $post_id ) {
 
 function delete_comment() {
   global $connection;
-  if ( isset( $_GET['delete'] )) {
+  if ( isset( $_GET['delete'] ) && $_SESSION['user_role'] === 'administrator' ) {
     $comment_id = $_GET['delete'];
     $post_id = $_GET['post_id'];
     delete_query( 'comments ', 'comment_id', $comment_id );
@@ -269,7 +269,7 @@ function update_comment_status() {
 
 function delete_user() {
   global $connection;
-  if ( isset( $_GET['delete'] ) ) {
+  if ( isset( $_GET['delete'] ) && $_SESSION['user_role'] === 'administrator' ) {
     $delete_user_id = $_GET['delete'];
     $get_user_posts = "SELECT * FROM posts WHERE post_author_id = $delete_user_id";
     $get_user_posts_result = query_result ( $get_user_posts );

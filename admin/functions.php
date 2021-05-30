@@ -49,11 +49,12 @@ function update_user_info($user_id, $user_info, $new_user_info, $column) {
   }
 }
 
-function update_post( $post_id, $post_category_id, $post_title, $post_image, $post_content, $post_status ) {
+function update_post( $post_id, $post_category_id, $post_title, $post_author_id, $post_image, $post_content, $post_status ) {
   global $connection;
   $query = "UPDATE posts SET ";
   $query .= "post_category_id = '$post_category_id', ";
   $query .= "post_title = '{$post_title}', ";
+  $query .= "post_author_id = {$post_author_id}, ";
   $query .= "post_date = now(), ";
   $query .= "post_image = '{$post_image}', ";
   $query .= "post_content = '{$post_content}', ";
@@ -211,11 +212,17 @@ function update_post_category() {
 
 }
 
+function update_post_author( $post_author_id, $post_id ) {
+  global $connection;
+  $update_post_author_query = "UPDATE posts SET post_author_id = $post_author_id WHERE post_id = $post_id";
+  $update_post_author_query_result = query_result( $update_post_author_query );
+}
+
 function update_post_status() {
   global $connection;
   if ( isset( $_POST['update_post_status'] ) && isset( $_GET['post_id'] ) ) {
-    echo $post_status = $_POST['update_post_status'];
-    echo $post_id = $_GET['post_id'];
+    $post_status = $_POST['update_post_status'];
+    $post_id = $_GET['post_id'];
     $update_post_status_query = "UPDATE posts SET post_status = '$post_status' WHERE  post_id = $post_id";
     $update_post_status_query_result = query_result( $update_post_status_query );
     header("Location: posts.php");
@@ -247,8 +254,7 @@ function update_comment_status() {
     $comment_id = $_GET['comment_id'];
     
     $update_comment_status_query = "UPDATE comments SET comment_status = '$comment_status' WHERE  comment_id = $comment_id";
-    $update_comment_status_query_result = mysqli_query( $connection, $update_comment_status_query );
-    confirm_query( $update_comment_status_query_result );
+    $update_comment_status_query_result = query_result( $update_comment_status_query );
     if ( isset( $_GET['post_id'] ) ) {
       $post_id = $_GET['post_id'];
       header("Location: comments.php?post_id=$post_id");
@@ -265,9 +271,14 @@ function delete_user() {
   global $connection;
   if ( isset( $_GET['delete'] ) ) {
     $delete_user_id = $_GET['delete'];
+    $get_user_posts = "SELECT * FROM posts WHERE post_author_id = $delete_user_id";
+    $get_user_posts_result = query_result ( $get_user_posts );
+    while ($row = mysqli_fetch_assoc( $get_user_posts_result ) ) {
+      $post_id = $row['post_id'];
+      update_post_author(1, $post_id );
+    }
     $delete_user_query = "DELETE FROM users WHERE user_id = $delete_user_id";
-    $delete_user_query_result = mysqli_query($connection, $delete_user_query);
-    confirm_query($delete_user_query_result);
+    $delete_user_query_result = query_result( $delete_user_query );
     header("Location: users.php");
   }
 }
@@ -528,5 +539,21 @@ function users_online() {
 }
 
 users_online();
+
+function display_authors( $selected_user_id ) {
+  $select_user_query = "SELECT * FROM users";
+  $select_user_query_result = query_result( $select_user_query );
+  while ( $row = mysqli_fetch_assoc( $select_user_query_result ) ) {
+    $user_id = $row['user_id'];
+    $user_name = $row['user_name'];
+    if ( $user_id == $selected_user_id ) {
+      echo "<option selected='selected' value='{$user_id}'>{$user_name}</option>";
+      
+    } else {
+      echo "<option value='{$user_id}'>{$user_name}</option>";
+      
+    }
+  }
+}
 
 ?>

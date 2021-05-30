@@ -38,8 +38,10 @@
       echo "<td>$user_firstname</td>";
       echo "<td>$user_lastname</td>";
       echo "<td>$user_email</td>";
-
-      echo "<td>"; ?> 
+      if ( $user_id !== '1' ) {
+      echo "<td>"; 
+      
+      ?> 
 
       <form action="users.php?&user_id=<?php echo $user_id ?>" method="post" >
 
@@ -63,11 +65,15 @@
       </form>
       
       <?php
-      echo "</td>";
-      echo "<td><a href='users.php?source=edit_user&user_id=$user_id'>Edit</a></td>";
-      echo "<td><a href='users.php?delete=$user_id' OnClick=\"return confirm( 'Are you sure you want to delete this user?' );\">Delete</a></td>";
-      echo "</tr>";
+        echo "</td>";
+        echo "<td><a href='users.php?source=edit_user&user_id=$user_id'>Edit</a></td>";
+        echo "<td><a href='users.php?delete=$user_id' OnClick=\"return confirm( 'Are you sure you want to delete this user?' );\">Delete</a></td>";
+        echo "</tr>";
 
+      } else {
+        echo "<td>$user_role</td>";
+
+      }
     }
 
     //Delete user

@@ -10,6 +10,7 @@ if ( isset( $_GET['post_id'] ) ) {
   while ( $row = mysqli_fetch_assoc( $select_posts_by_id ) ) {
     $post_title = $row['post_title'];
     $post_category_id = $row['post_category_id'];
+    $post_author_id = $row['post_author_id'];
     $post_status = $row['post_status'];
     $post_image = $row['post_image'];
     $post_content = $row['post_content'];
@@ -20,6 +21,7 @@ if ( isset( $_GET['post_id'] ) ) {
 
     $post_title  = $_POST['post_title'];
     $post_category_id  = $_POST['post_category_id'];
+    $post_author_id  = $_POST['post_author_id'];
     $post_status  = $_POST['post_status'];
     $post_image  = $_FILES['post_image']['name'];
     $post_image_temp  = $_FILES['post_image']['tmp_name'];
@@ -31,7 +33,7 @@ if ( isset( $_GET['post_id'] ) ) {
     $post_image = test_empty_image( $post_id, $post_image, 'posts' );
 
     // Update Post
-    update_post( $post_id, $post_category_id, $post_title, $post_image, $post_content, $post_status );
+    update_post( $post_id, $post_category_id, $post_title, $post_author_id, $post_image, $post_content, $post_status );
 
   }
 
@@ -43,6 +45,13 @@ if ( isset( $_GET['post_id'] ) ) {
   <div class="form-group">
     <label for="title">Post Title</label>
     <input type="text" value="<?php echo $post_title; ?>" class="form-control" name="post_title">
+  </div>
+
+  <div class="form-group">
+    <label for="post_author_id">Author</label><br>
+    <select class="form-control" name="post_author_id" id="post_author_id">
+    <?php display_authors( $post_author_id ); ?>
+    </select>
   </div>
 
   <div class="form-group">

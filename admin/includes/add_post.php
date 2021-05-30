@@ -4,7 +4,7 @@
 
     $post_title  = $_POST['post_title'];
     $post_category_id  = $_POST['post_category_id'];
-    $post_author_id  = $_SESSION['user_id'];
+    $post_author_id  = $_POST['post_author_id'];
     $post_status  = $_POST['post_status'];
 
     $post_image  = $_FILES['post_image']['name'];
@@ -47,6 +47,16 @@
   <div class="form-group">
     <label for="title">Post Title *</label>
     <input type="text" class="form-control" name="post_title">
+  </div>
+
+  <div class="form-group">
+    <label for="post_author_id">Author</label>
+    <select class="form-control" name="post_author_id" id="post_author_id">
+
+    <?php display_authors( $_SESSION['user_id'] ); ?>
+    
+    </select>
+   
   </div>
 
   <div class="form-group">

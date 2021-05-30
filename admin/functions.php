@@ -130,8 +130,13 @@ function delete_comment() {
   global $connection;
   if ( isset( $_GET['delete'] )) {
     $comment_id = $_GET['delete'];
+    $post_id = $_GET['post_id'];
     delete_query( 'comments ', 'comment_id', $comment_id );
-    header("Location: comments.php"); 
+    if ( isset( $_GET['post_id'] ) ) {
+      header("Location: comments.php?post_id=$post_id"); 
+    } else {
+      header("Location: comments.php"); 
+    }
   }
 }
 
@@ -244,7 +249,12 @@ function update_comment_status() {
     $update_comment_status_query = "UPDATE comments SET comment_status = '$comment_status' WHERE  comment_id = $comment_id";
     $update_comment_status_query_result = mysqli_query( $connection, $update_comment_status_query );
     confirm_query( $update_comment_status_query_result );
-    header("Location: comments.php");
+    if ( isset( $_GET['post_id'] ) ) {
+      $post_id = $_GET['post_id'];
+      header("Location: comments.php?post_id=$post_id");
+    } else {
+      header("Location: comments.php");
+    }
     
   }
 

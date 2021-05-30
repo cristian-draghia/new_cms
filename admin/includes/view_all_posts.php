@@ -112,7 +112,14 @@ if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== '
       echo"</td>";
       echo "<td align='center'><img src='../images/$post_image' width=75px ></td>";
       //Total comments and approved comments
-      echo "<td>$post_comment_count ($post_approved_comment_count)</td>";
+      echo "<td>";
+      if ( $post_comment_count > 0 ) {
+        echo "<a href='comments.php?post_id=$post_id'>$post_comment_count ($post_approved_comment_count)</a>";
+      } else {
+        echo "$post_comment_count ($post_approved_comment_count)";
+      }
+      
+      echo "</td>";
       echo "<td>$post_date</td>";
       echo "<td><a href='posts.php?source=edit_post&post_id={$post_id}'>Edit</a></td>";
       echo "<td><a href='posts.php?delete={$post_id}' OnClick=\"return confirm( 'Are you sure you want to delete this post?' );\">Delete</a></td>"; 

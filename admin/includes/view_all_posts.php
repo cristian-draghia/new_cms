@@ -1,7 +1,7 @@
 <?php
 
 if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== 'bulk_option' && isset( $_POST['posts'] ) ) {
-  $bulk_option = $_POST['select_bulk_option'];
+  $bulk_option = escape( $_POST['select_bulk_option'] );
   $posts = $_POST['posts'];
   foreach ( $posts as $post_id ) {
     if ( $bulk_option === 'delete') {
@@ -71,16 +71,16 @@ if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== '
     $select_posts = query_result( $query );
     
     while ( $row = mysqli_fetch_assoc( $select_posts )) {
-      $post_id = $row['post_id'];
-      $post_category_id = $row['post_category_id'];
+      $post_id = escape( $row['post_id'] );
+      $post_category_id = escape( $row['post_category_id'] );
       $post_category_name = get_post_category( $post_category_id );
-      $post_title = $row['post_title'];
-      $post_author_id = $row['post_author_id'];
+      $post_title = escape( $row['post_title'] );
+      $post_author_id = escape( $row['post_author_id'] );
       $post_author_name = get_author_name( $post_author_id );
-      $post_date = $row['post_date'];
-      $post_image = $row['post_image'];
-      $post_status = $row['post_status'];    
-      $post_views = $row['post_views'];
+      $post_date = escape( $row['post_date'] );
+      $post_image = escape( $row['post_image'] );
+      $post_status = escape( $row['post_status'] );    
+      $post_views = escape( $row['post_views'] );
       $post_comments = get_post_comments_count( $post_id );
       $post_comment_count = $post_comments[0];
       $post_approved_comment_count = $post_comments[1];

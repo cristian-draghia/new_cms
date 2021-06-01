@@ -21,13 +21,13 @@
 
 
     while ( $row = mysqli_fetch_assoc( $select_comments )) {
-      $comment_id = $row['comment_id'];
-      $comment_post_id = $row['comment_post_id'];
-      $comment_author = $row['comment_author'];
-      $comment_content = $row['comment_content'];
-      $comment_email = $row['comment_email'];
-      $comment_status = $row['comment_status'];
-      $comment_date = $row['comment_date'];
+      $comment_id = escape( $row['comment_id'] );
+      $comment_post_id = escape( $row['comment_post_id'] );
+      $comment_author = escape( $row['comment_author'] );
+      $comment_content = escape( $row['comment_content'] );
+      $comment_email = escape( $row['comment_email'] );
+      $comment_status = escape( $row['comment_status'] );
+      $comment_date = escape( $row['comment_date'] );
 
       echo "<tr>";
       echo "<td>$comment_author</td>";

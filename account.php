@@ -32,13 +32,13 @@ if ( isset( $_GET['user_id'] ) ) {
 }
 
 if ( isset( $_POST['update_user'] ) ) {
-  $new_user_name = escape_string( $_POST['user_name'] );
-  $new_user_firstname = escape_string( $_POST['user_firstname'] );
-  $new_user_lastname = escape_string( $_POST['user_lastname'] );
-  $new_user_email = escape_string( $_POST['user_email'] );
+  $new_user_name = escape( $_POST['user_name'] );
+  $new_user_firstname = escape( $_POST['user_firstname'] );
+  $new_user_lastname = escape( $_POST['user_lastname'] );
+  $new_user_email = escape( $_POST['user_email'] );
 
-  $new_user_image  = $_FILES['user_image']['name'];
-  $new_user_image_temp  = $_FILES['user_image']['tmp_name'];
+  $new_user_image  = escape( $_FILES['user_image']['name'] );
+  $new_user_image_temp  = escape( $_FILES['user_image']['tmp_name'] );
 
   move_uploaded_file($new_user_image_temp, "images/$new_user_image");
 

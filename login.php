@@ -12,8 +12,8 @@
 <?php
 
 if ( isset( $_POST['login'] ) ) {
-  $new_user_name = escape_string( $_POST['user_name'] );
-  $new_user_password = escape_string ($_POST['user_password'] );
+  $new_user_name = escape( $_POST['user_name'] );
+  $new_user_password = escape( $_POST['user_password'] );
 
   $select_all_users_query = "SELECT * FROM users WHERE user_name = '$new_user_name' OR user_email = '$new_user_name' ";
   $select_all_users_query_result = mysqli_query ( $connection, $select_all_users_query );

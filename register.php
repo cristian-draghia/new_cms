@@ -8,10 +8,10 @@
 <?php
 
 if ( isset( $_POST['register'] ) ) {
-  $user_name = escape_string( $_POST['user_name'] );
-  $user_email = escape_string( $_POST['user_email'] );
-  $user_password = escape_string( $_POST['user_password'] );
-  $user_password_confirm = escape_string( $_POST['user_password_confirm'] );
+  $user_name = escape( $_POST['user_name'] );
+  $user_email = escape( $_POST['user_email'] );
+  $user_password = escape( $_POST['user_password'] );
+  $user_password_confirm = escape( $_POST['user_password_confirm'] );
   
   $check_name = !empty($user_name) && strlen($user_name) > 3;
   $check_email = !empty($user_email) && strlen($user_email) > 3;

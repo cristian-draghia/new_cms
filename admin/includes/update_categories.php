@@ -6,7 +6,7 @@
     <?php 
 
     if ( isset( $_GET['edit'] )) {
-      $cat_id = $_GET['edit'];
+      $cat_id = escape( $_GET['edit'] );
 
     
 
@@ -15,8 +15,8 @@
 
 
     while ( $row = mysqli_fetch_assoc( $select_categories_id )) {
-        $cat_id = $row['cat_id'];
-        $cat_title = $row['cat_title'];
+        $cat_id = escape( $row['cat_id'] );
+        $cat_title = escape( $row['cat_title'] );
 
     ?>
     
@@ -28,7 +28,7 @@
 
     //Update query
     if( isset( $_POST['update_category'] )) {
-      $the_cat_title = $_POST['cat_title'];
+      $the_cat_title = escape( $_POST['cat_title'] );
       $query = "UPDATE categories SET cat_title = '{$the_cat_title}' WHERE cat_id = {$cat_id}";
       $upate_query = mysqli_query( $connection, $query );
       // header("Location: categories.php");

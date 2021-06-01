@@ -1,5 +1,10 @@
 <?php
 
+function escape( $string ) {
+  global $connection;
+  return mysqli_real_escape_string( $connection, trim( $string ) );
+}
+
 function confirm_query( $query ) {
   global $connection;
   if ( !$query) {
@@ -73,13 +78,13 @@ function get_post_info( $post_id ) {
   $query_result = query_result( $query );
   $row = mysqli_fetch_assoc( $query_result );
   $post_array = array(
-    "post_category_id" => $row['post_category_id'],
-    "post_title" => $row['post_title'],
-    "post_author_id" => $row['post_author_id'],
-    "post_date" => $row['post_date'],
-    "post_image" => $row['post_image'],
-    "post_content" => $row['post_content'],
-    "post_status" => $row['post_status'],
+    "post_category_id" => escape( $row['post_category_id'] ),
+    "post_title" => escape( $row['post_title'] ),
+    "post_author_id" => escape( $row['post_author_id'] ),
+    "post_date" => escape( $row['post_date'] ),
+    "post_image" => escape( $row['post_image'] ),
+    "post_content" => escape( $row['post_content'] ),
+    "post_status" => escape( $row['post_status'] ),
   );
 
   return $post_array;
@@ -94,7 +99,7 @@ function delete_query( $table, $column, $value ) {
 function delete_category() {
   global $connection;
   if( isset( $_GET['delete'] ) && $_SESSION['user_role'] === 'administrator'  ) {
-    $cat_id = $_GET['delete'];
+    $cat_id = escape( $_GET['delete'] );
     delete_query( 'categories', 'cat_id', $cat_id );
     $select_all_posts_query = "SELECT * FROM posts WHERE post_category_id = $cat_id";
     $select_all_posts_query_result = query_result( $select_all_posts_query );
@@ -110,7 +115,7 @@ function delete_category() {
 function delete_post() {
   global $connection;
   if ( isset( $_GET['delete'] ) && $_SESSION['user_role'] === 'administrator'  ) {
-    $post_id = $_GET['delete'];
+    $post_id = escape( $_GET['delete'] );
     delete_query( 'posts', 'post_id', $post_id );
     delete_post_comments( $post_id );
     header("Location: posts.php");
@@ -122,7 +127,7 @@ function delete_post_comments( $post_id ) {
   $select_all_comments_querry = "SELECT comment_id FROM comments WHERE comment_post_id = $post_id";
   $select_all_comments_querry_result = query_result( $select_all_comments_querry );
   while ( $row = mysqli_fetch_assoc( $select_all_comments_querry_result ) ) {
-    delete_query( 'comments ', 'comment_id', $row['comment_id'] );
+    delete_query( 'comments ', 'comment_id', escape( $row['comment_id'] ) );
   }
 
 }
@@ -130,8 +135,8 @@ function delete_post_comments( $post_id ) {
 function delete_comment() {
   global $connection;
   if ( isset( $_GET['delete'] ) && $_SESSION['user_role'] === 'administrator' ) {
-    $comment_id = $_GET['delete'];
-    $post_id = $_GET['post_id'];
+    $comment_id = escape( $_GET['delete'] );
+    $post_id = escape( $_GET['post_id'] );
     delete_query( 'comments ', 'comment_id', $comment_id );
     if ( isset( $_GET['post_id'] ) ) {
       header("Location: comments.php?post_id=$post_id"); 
@@ -148,7 +153,7 @@ function insert_categories() {
   global $connection;
   if( isset( $_POST['submit'] )) {
                       
-    $cat_title = $_POST['cat_title'];
+    $cat_title = escape( $_POST['cat_title'] );
 
     if( $cat_title == '' || empty( $cat_title )) {
       echo "This field should not be empy";
@@ -172,8 +177,8 @@ function find_all_categories() {
 
 
   while ( $row = mysqli_fetch_assoc( $select_categories )) {
-      $cat_id = $row['cat_id'];
-      $cat_title = $row['cat_title'];
+      $cat_id = escape( $row['cat_id'] );
+      $cat_title = escape( $row['cat_title'] );
       echo "<tr>";
       echo "<td>{$cat_id}</td>";
       echo "<td>{$cat_title}</td>";
@@ -189,8 +194,8 @@ function display_categories( $selected_cat_id ) {
   $select_all_categories_query = "SELECT * FROM categories";
   $select_all_categories_query_result = query_result( $select_all_categories_query );
   while ( $row = mysqli_fetch_assoc( $select_all_categories_query_result ) ) {
-    $cat_id = $row['cat_id'];
-    $cat_title = $row['cat_title'];
+    $cat_id = escape( $row['cat_id'] );
+    $cat_title = escape( $row['cat_title'] );
     if ( $cat_id == $selected_cat_id ) {
       echo "<option selected='selected' value='{$cat_id}'>{$cat_title}</option>";
     } else {
@@ -202,8 +207,8 @@ function display_categories( $selected_cat_id ) {
 function update_post_category() {
   global $connection;
   if ( isset( $_POST['update_post_category'] ) && isset( $_GET['post_id'] ) ) {
-    $post_status = $_POST['update_post_category'];
-    $post_id = $_GET['post_id'];
+    $post_status = escape( $_POST['update_post_category'] );
+    $post_id = escape( $_GET['post_id'] );
 
     // $update_post_status_query = "UPDATE posts SET post_status = '$post_status' WHERE  post_id = $post_id";
     // $update_post_status_query_result = query_result( $update_post_status_query );
@@ -221,8 +226,8 @@ function update_post_author( $post_author_id, $post_id ) {
 function update_post_status() {
   global $connection;
   if ( isset( $_POST['update_post_status'] ) && isset( $_GET['post_id'] ) ) {
-    $post_status = $_POST['update_post_status'];
-    $post_id = $_GET['post_id'];
+    $post_status = escape( $_POST['update_post_status'] );
+    $post_id = escape( $_GET['post_id'] );
     $update_post_status_query = "UPDATE posts SET post_status = '$post_status' WHERE  post_id = $post_id";
     $update_post_status_query_result = query_result( $update_post_status_query );
     header("Location: posts.php");
@@ -238,7 +243,7 @@ function test_empty_image($test_id, $test_image, $table) {
     $update_same_image_query = "SELECT * FROM $table WHERE $current_id = $test_id";
     $update_same_image_query_result = mysqli_query( $connection, $update_same_image_query );
     while ($row = mysqli_fetch_assoc( $update_same_image_query_result ) ) {
-      $test_image = $row[$current_image];
+      $test_image = escape( $row[$current_image] );
     }
   }
   return $test_image;
@@ -250,13 +255,13 @@ function update_comment_status() {
 
   if ( isset($_POST['comment_status_update']) && isset( $_GET['comment_id'] ) )  {
 
-    $comment_status = $_POST['comment_status_update'];
-    $comment_id = $_GET['comment_id'];
+    $comment_status = escape( $_POST['comment_status_update'] );
+    $comment_id = escape( $_GET['comment_id'] );
     
     $update_comment_status_query = "UPDATE comments SET comment_status = '$comment_status' WHERE  comment_id = $comment_id";
     $update_comment_status_query_result = query_result( $update_comment_status_query );
     if ( isset( $_GET['post_id'] ) ) {
-      $post_id = $_GET['post_id'];
+      $post_id = escape( $_GET['post_id'] );
       header("Location: comments.php?post_id=$post_id");
     } else {
       header("Location: comments.php");
@@ -270,11 +275,11 @@ function update_comment_status() {
 function delete_user() {
   global $connection;
   if ( isset( $_GET['delete'] ) && $_SESSION['user_role'] === 'administrator' ) {
-    $delete_user_id = $_GET['delete'];
+    $delete_user_id = escape( $_GET['delete'] );
     $get_user_posts = "SELECT * FROM posts WHERE post_author_id = $delete_user_id";
     $get_user_posts_result = query_result ( $get_user_posts );
     while ($row = mysqli_fetch_assoc( $get_user_posts_result ) ) {
-      $post_id = $row['post_id'];
+      $post_id = escape( $row['post_id'] );
       update_post_author(1, $post_id );
     }
     $delete_user_query = "DELETE FROM users WHERE user_id = $delete_user_id";
@@ -286,8 +291,8 @@ function delete_user() {
 function update_user_role() {
   global $connection;
   if ( isset( $_POST['updated_user_role'] ) && isset( $_GET['user_id'] ) ) {
-    $user_id = $_GET['user_id'];
-    $user_role = $_POST['updated_user_role'];
+    $user_id = escape( $_GET['user_id'] );
+    $user_role = escape( $_POST['updated_user_role'] );
     
     $update_user_role_query = "UPDATE users SET user_role = '$user_role' WHERE  user_id = $user_id";
     $update_user_role_query_result = mysqli_query( $connection, $update_user_role_query );
@@ -317,7 +322,7 @@ function get_author_name( $post_author_id ) {
   $get_author_name_query = "SELECT user_name FROM users WHERE user_id = $post_author_id";
   $get_author_name_query_result = query_result( $get_author_name_query );
   $row = mysqli_fetch_array( $get_author_name_query_result );
-  return $row['user_name'];
+  return escape( $row['user_name'] );
 }
 
 function get_post_category( $post_id ) {
@@ -325,7 +330,7 @@ function get_post_category( $post_id ) {
   $get_post_category_query = "SELECT cat_title FROM categories WHERE cat_id = $post_id";
   $get_post_category_query_result = query_result( $get_post_category_query );
   $row = mysqli_fetch_array( $get_post_category_query_result );
-  return $row['cat_title'];
+  return escape( $row['cat_title'] );
 }
 
 function get_post_comments_count ( $post_id ) {
@@ -334,7 +339,7 @@ function get_post_comments_count ( $post_id ) {
   $get_post_comments_count_query = "SELECT comment_status FROM comments WHERE comment_post_id = $post_id";
   $get_post_comments_count_query_result = query_result( $get_post_comments_count_query );
   while ( $row = mysqli_fetch_array( $get_post_comments_count_query_result ) ) {
-    if ( $row['comment_status'] === 'approved' ) {
+    if ( escape( $row['comment_status'] ) === 'approved' ) {
       $approved_comments++;
     }
   }
@@ -406,19 +411,19 @@ function display_posts( $query ) {
   $query_result = query_result( $query );
 
   while ( $row = mysqli_fetch_assoc( $query_result )) {
-    $post_id = $row['post_id'];
-    $post_category_id = $row['post_category_id'];
+    $post_id = escape( $row['post_id'] );
+    $post_category_id = escape( $row['post_category_id'] );
     $post_category_name = get_post_category( $post_category_id );
-    $post_title = $row['post_title'];
-    $post_author_id = $row['post_author_id'];
+    $post_title = escape( $row['post_title'] );
+    $post_author_id = escape( $row['post_author_id'] );
     $post_author_name = get_author_name( $post_author_id );
     
-    $post_date = $row['post_date'];
-    $post_image = $row['post_image'];
+    $post_date = escape( $row['post_date'] );
+    $post_image = escape( $row['post_image'] );
     if ( empty( $_GET ) ) {
-      $post_content = substr($row['post_content'], 0, 100);
+      $post_content = substr(escape( $row['post_content'] ), 0, 100);
     } else {
-      $post_content = $row['post_content'];
+      $post_content = escape( $row['post_content'] );
     }
 
     create_single_post( $post_id, $post_category_id, $post_category_name, $post_title, $post_author_id, $post_author_name, 
@@ -460,9 +465,9 @@ function display_comments( $post_id ) {
   $select_all_comments_querry_result = query_result( $select_all_comments_querry );
   
   while ( $row = mysqli_fetch_assoc( $select_all_comments_querry_result ) ) {
-    $comment_author = $row['comment_author'];
-    $comment_content = $row['comment_content'];
-    $comment_date = $row['comment_date'];
+    $comment_author = escape( $row['comment_author'] );
+    $comment_content = escape( $row['comment_content'] );
+    $comment_date = escape( $row['comment_date'] );
 
   ?>
     <!-- Comment -->
@@ -485,10 +490,10 @@ function display_comments( $post_id ) {
 
 function leave_comment() {
   global $connection;
-  $post_id = $_GET['post_id'];
-  $comment_author = $_POST['comment_author'];
-  $comment_content = $_POST['comment_content'];
-  $comment_email = $_POST['comment_email'];
+  $post_id = escape( $_GET['post_id'] );
+  $comment_author = escape( $_POST['comment_author'] );
+  $comment_content = escape( $_POST['comment_content'] );
+  $comment_email = escape( $_POST['comment_email'] );
 
   if (!empty( $comment_author )  && !empty( $comment_email ) && !empty( $comment_content ) )  {
 
@@ -544,8 +549,8 @@ function display_authors( $selected_user_id ) {
   $select_user_query = "SELECT * FROM users";
   $select_user_query_result = query_result( $select_user_query );
   while ( $row = mysqli_fetch_assoc( $select_user_query_result ) ) {
-    $user_id = $row['user_id'];
-    $user_name = $row['user_name'];
+    $user_id = escape( $row['user_id'] );
+    $user_name = escape( $row['user_name'] );
     if ( $user_id == $selected_user_id ) {
       echo "<option selected='selected' value='{$user_id}'>{$user_name}</option>";
       

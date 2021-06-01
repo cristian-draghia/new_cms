@@ -3,28 +3,28 @@
 //Get default values for edit
 if ( isset( $_GET['user_id'] ) ) {
   
-  $user_id = $_GET['user_id'];
+  $user_id = escape( $_GET['user_id'] );
   $user_info_query = "SELECT * FROM users WHERE user_id = $user_id";
   $user_info_query_result = query_result( $user_info_query );
   while ( $row = mysqli_fetch_assoc( $user_info_query_result ) ) {
-    $user_name = $row['user_name'];
-    $user_password = $row['user_password'];
-    $user_firstname = $row['user_firstname'];
-    $user_lastname = $row['user_lastname'];
-    $user_email = $row['user_email'];
-    $user_role = $row['user_role'];
-    $user_image = $row['user_image'];
+    $user_name = escape( $row['user_name'] );
+    $user_password = escape( $row['user_password'] );
+    $user_firstname = escape( $row['user_firstname'] );
+    $user_lastname = escape( $row['user_lastname'] );
+    $user_email = escape( $row['user_email'] );
+    $user_role = escape( $row['user_role'] );
+    $user_image = escape( $row['user_image'] );
   }
 }
 
 if ( isset( $_POST['update_user'] ) ) {
-  $new_user_name = escape_string( $_POST['user_name'] );
-  $new_user_firstname = escape_string( $_POST['user_firstname'] );
-  $new_user_lastname = escape_string( $_POST['user_lastname'] );
-  $new_user_email = escape_string( $_POST['user_email'] );
+  $new_user_name = escape( $_POST['user_name'] );
+  $new_user_firstname = escape( $_POST['user_firstname'] );
+  $new_user_lastname = escape( $_POST['user_lastname'] );
+  $new_user_email = escape( $_POST['user_email'] );
 
-  $new_user_image  = $_FILES['user_image']['name'];
-  $new_user_image_temp  = $_FILES['user_image']['tmp_name'];
+  $new_user_image  = escape( $_FILES['user_image']['name'] );
+  $new_user_image_temp  = escape( $_FILES['user_image']['tmp_name'] );
 
   move_uploaded_file($new_user_image_temp, "images/$new_user_image");
 
@@ -67,7 +67,7 @@ if ( isset( $_POST['update_user'] ) ) {
     }
   }
   
-  // header( "Location: account.php?user_id=$user_id");
+  header( "Location: users.php?source=edit_user&user_id=$user_id");
 
 }
 

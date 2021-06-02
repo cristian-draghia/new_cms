@@ -51,6 +51,7 @@
     <link href="css/summernote.css" rel="stylesheet">
 
     <!-- <script src="js/js.js"></script> -->
+    <script src="js/jquery.js"></script>
 
 
 

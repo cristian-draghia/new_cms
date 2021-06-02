@@ -1,5 +1,7 @@
 <?php
 
+include("delete_modal.php");
+
 if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== 'bulk_option' && isset( $_POST['posts'] ) ) {
   $bulk_option = escape( $_POST['select_bulk_option'] );
   $posts = $_POST['posts'];
@@ -122,7 +124,7 @@ if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== '
       echo "</td>";
       echo "<td>$post_date</td>";
       echo "<td><a href='posts.php?source=edit_post&post_id={$post_id}'>Edit</a></td>";
-      echo "<td><a href='posts.php?delete={$post_id}' OnClick=\"return confirm( 'Are you sure you want to delete this post?' );\">Delete</a></td>"; 
+      echo "<td><a rel='$post_id' href='javascript:void(0)' class='delete_link'>Delete</a></td>";
       echo "<td>$post_views</td>";
       echo "</tr>";
 
@@ -137,3 +139,18 @@ if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== '
   </tbody>
 </table>
 </form>
+
+<script>
+  $(document).ready(function() {
+    $(".delete_link").on("click", function() {
+      var id = $(this).attr("rel");
+      var delete_url ="posts.php?delete=" + id;
+
+      $(".modal-delete_link").attr("href", delete_url);
+      $("#myModal").modal("show");
+    });
+
+  });
+
+
+</script>

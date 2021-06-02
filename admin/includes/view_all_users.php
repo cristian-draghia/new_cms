@@ -1,3 +1,4 @@
+<?php include("delete_modal.php"); ?>
 
 <table class="table table-bordered table-hover">
   <thead>
@@ -67,7 +68,8 @@
       <?php
         echo "</td>";
         echo "<td><a href='users.php?source=edit_user&user_id=$user_id'>Edit</a></td>";
-        echo "<td><a href='users.php?delete=$user_id' OnClick=\"return confirm( 'Are you sure you want to delete this user?' );\">Delete</a></td>";
+        echo "<td><a rel='$user_id' href='javascript:void(0)' class='delete_link'>Delete</a></td>";
+        // echo "<td><a href='users.php?delete=$user_id' OnClick=\"return confirm( 'Are you sure you want to delete this user?' );\">Delete</a></td>";
         echo "</tr>";
 
       } else {
@@ -83,8 +85,20 @@
     update_user_role();
 
     ?>
-
-
-    
   </tbody>
 </table>
+
+<script>
+  $(document).ready(function() {
+    $(".delete_link").on("click", function() {
+      var id = $(this).attr("rel");
+      var delete_url ="users.php?delete=" + id;
+
+      $(".modal-delete_link").attr("href", delete_url);
+      $("#myModal").modal("show");
+    });
+
+  });
+
+
+</script>

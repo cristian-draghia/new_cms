@@ -1,12 +1,13 @@
 <?php  include "includes/db.php"; ?>
 <?php  include "includes/header.php"; ?>
 <?php
-  if(!isset($_SESSION)) { 
+  if (!isset( $_SESSION ) ) { 
     session_start(); 
-  } else {
+  } 
+
+  if ( isset( $_SESSION['user_name'] ) ) {
     header("Location: index.php");
   }
-
 ?>
 
 

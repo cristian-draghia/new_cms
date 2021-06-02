@@ -47,3 +47,7 @@ footer {
     background-color:#337ab7 !important;
     color: #fff;
 }
+
+#content {
+    resize: none;
+}

@@ -3,8 +3,12 @@
 <?php
   if(!isset($_SESSION)) { 
     session_start(); 
-  } 
+  } else {
+    header("Location: index.php");
+  }
+
 ?>
+
 
 <!-- Navigation -->
 <?php  include "includes/navigation.php"; ?>

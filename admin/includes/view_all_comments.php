@@ -1,3 +1,4 @@
+<?php include("delete_modal.php"); ?>
 
 <table class="table table-bordered table-hover">
   <thead>
@@ -77,7 +78,7 @@
       }
 
       echo "<td>$comment_date</td>";
-      echo "<td><a href='comments.php?delete={$comment_id}' OnClick=\"return confirm( 'Are you sure you want to delete this comment?' );\">Delete</a></td>"; 
+      echo "<td><a rel='$comment_id' href='javascript:void(0)' class='delete_link'>Delete</a></td>"; 
       echo "</tr>";
 
     }
@@ -94,3 +95,18 @@
     
   </tbody>
 </table>
+
+<script>
+  $(document).ready(function() {
+    $(".delete_link").on("click", function() {
+      var id = $(this).attr("rel");
+      var delete_url ="comments.php?delete=" + id;
+
+      $(".modal-delete_link").attr("href", delete_url);
+      $("#myModal").modal("show");
+    });
+
+  });
+
+
+</script>

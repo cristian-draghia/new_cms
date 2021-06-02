@@ -29,6 +29,7 @@
                 </ul>
                 <!--Right side elements-->
                 <ul class="nav navbar-nav navbar-right">
+                <li><a href="./contact.php"><i class="fa fa-pencil-square" aria-hidden="true"></i> Contact</a></li>
                 <?php 
                 if ( !isset( $_SESSION['user_name'] ) ) {
                   echo "<li><a href='./login.php'><i class='fa fa-sign-in' aria-hidden='true'></i> Login</a></li>";

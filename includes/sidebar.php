@@ -26,7 +26,7 @@ if ( !isset($_SESSION['user_name'] ) ) {
 <!-- Login Form -->
 <div class="well">
     <h4>Login</h4>
-    <form action="includes/login.php" method='post'>
+    <form action="login.php" method='post'>
     <div class="form-group">
         <input class="form-control" type="text" name="user_name" placeholder="Enter username">
     </div>
@@ -34,13 +34,30 @@ if ( !isset($_SESSION['user_name'] ) ) {
         <input class="form-control" type="password" name="user_password" placeholder="Enter password">
     </div>
     <div class="form-group">
-    <input class="form-control login-button" type="submit" name="login_user" value="Login">
+    <input class="form-control login-button" type="submit" name="login" value="Login">
   </div>
     </form>
 </div>
 
 <?php 
-} 
+} else {
+    ?>
+
+    <!-- Login Form -->
+<div class="well">
+    <h4>You are login as <?php echo "<a href='account.php'>". $_SESSION['user_name'] . "</a>"; ?></h4>
+    <div class="form-group">
+    <a href="includes/logout.php"><input class="form-control login-button" type="submit" name="login" value="Log Out"></a>
+  </div>
+
+</div>
+
+    <?php
+
+
+
+
+}
 ?>
 
 <!-- Blog Categories Well -->

@@ -20,7 +20,7 @@
         $select_post_query_result = query_result( $select_post_query );
         while ( $row = mysqli_fetch_assoc( $select_post_query_result ) ) {
           $post_status = escape( $row['post_status'] );
-          if ( $post_status ) {
+          if ( $post_status === 'published' ) {
             $query_update_view = "UPDATE posts SET post_views = post_views + 1 WHERE post_id = $post_id";
             $query_update_view_result = query_result ( $query_update_view );
           }

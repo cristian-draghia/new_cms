@@ -204,19 +204,6 @@ function display_categories( $selected_cat_id ) {
   }
 }
 
-function update_post_category() {
-  global $connection;
-  if ( isset( $_POST['update_post_category'] ) && isset( $_GET['post_id'] ) ) {
-    $post_status = escape( $_POST['update_post_category'] );
-    $post_id = escape( $_GET['post_id'] );
-
-    // $update_post_status_query = "UPDATE posts SET post_status = '$post_status' WHERE  post_id = $post_id";
-    // $update_post_status_query_result = query_result( $update_post_status_query );
-    // header("Location: posts.php");
-  }
-
-}
-
 function update_post_author( $post_author_id, $post_id ) {
   global $connection;
   $update_post_author_query = "UPDATE posts SET post_author_id = $post_author_id WHERE post_id = $post_id";
@@ -349,9 +336,11 @@ function get_post_comments_count ( $post_id ) {
 }
 
 function create_single_post( $post_id, $post_category_id, $post_category_name, $post_title, $post_author_id, $post_author_name, 
-                             $post_date, $post_image, $post_content ) {
-  ?>
+                             $post_date, $post_image, $post_content, $post_status ) {
 
+  if ( (isset( $_SESSION['user_role'] ) && $_SESSION['user_role'] == 'administrator' ) || $post_status === 'published')  {
+  ?>
+  
   <!-- HTML -->
   <div class="single-post">
       
@@ -373,8 +362,12 @@ function create_single_post( $post_id, $post_category_id, $post_category_name, $
           echo "Done by: <a href='authors.php?author_id=$post_author_id'>$post_author_name</a>";
         }
         ?>
-        
       </p>
+      <?php 
+      if ( isset( $_SESSION['user_role'] ) && $_SESSION['user_role'] == 'administrator' && $_SERVER['PHP_SELF'] !== '/new_cms/index.php' ) {
+        echo "<p class='lead'> Status: $post_status</p>";
+      }
+      ?>
       <p><span class="glyphicon glyphicon-time"></span> Posted on <?php echo $post_date; ?></p>
       <hr>
       <?php
@@ -404,6 +397,11 @@ function create_single_post( $post_id, $post_category_id, $post_category_name, $
     </div>
 
   <?php
+  //Return to post if post is draft and user not admin
+  } elseif ( $post_status === 'draft') {
+    header("Location: posts.php");
+  }
+  
 }
 
 function display_posts( $query ) {
@@ -425,9 +423,10 @@ function display_posts( $query ) {
     } else {
       $post_content = escape( $row['post_content'] );
     }
+    $post_status = escape( $row['post_status'] );
 
     create_single_post( $post_id, $post_category_id, $post_category_name, $post_title, $post_author_id, $post_author_name, 
-                        $post_date, $post_image, $post_content );
+                        $post_date, $post_image, $post_content, $post_status );
   
   }
 
@@ -436,9 +435,13 @@ function display_posts( $query ) {
   }
 }
 
-function display_comments( $post_id ) {
+function display_comments( $post_id, $post_status ) {
 
   global $connection;
+
+  if ( ( isset( $_SESSION['user_role'] ) && $_SESSION['user_role'] === 'administrator') || $post_status === 'published' ) {
+
+
   ?>
    <!-- Comments Form -->
    <div class="well">
@@ -484,7 +487,8 @@ function display_comments( $post_id ) {
   </div>
 
   <?php 
-  } 
+  }
+} 
 
 }
 

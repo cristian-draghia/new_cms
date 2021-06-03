@@ -15,11 +15,8 @@
                 <ul class="nav navbar-nav">
                 <?php 
                 //All postss button
-                if ( $active_page === 'posts' && empty( $_GET ) ) {
-                  echo "<li class='active'><a href='posts.php'>All posts</a></li>";
-                } else {
-                  echo "<li><a href='posts.php'>All posts</a></li>";
-                }
+                if ( basename( $_SERVER['PHP_SELF'] )  === 'posts.php' && empty( $_GET ) ) echo "<li class='active'>"; else echo "<li>";
+                echo "<a href='posts.php'>All posts</a></li>";
                 //Edit Post Button
                 if ( isset( $_SESSION['user_role'] ) && $_SESSION['user_role'] === 'administrator' && isset( $_GET['post_id'] ) )  {
                   $post_id = $_GET['post_id'];
@@ -29,16 +26,20 @@
                 </ul>
                 <!--Right side elements-->
                 <ul class="nav navbar-nav navbar-right">
-                <li><a href="./contact.php"><i class="fa fa-pencil-square" aria-hidden="true"></i> Contact</a></li>
+                <?php if ( basename( $_SERVER['PHP_SELF'] )  === 'contact.php') echo "<li class='active'>"; else echo "<li>";?>
+                <a href="./contact.php"><i class="fa fa-pencil-square" aria-hidden="true"></i> Contact</a></li>
                 <?php 
                 if ( !isset( $_SESSION['user_name'] ) ) {
-                  echo "<li><a href='./login.php'><i class='fa fa-sign-in' aria-hidden='true'></i> Login</a></li>";
-                  echo "<li><a href='./register.php'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> Register</a></li>";
+                  if ( basename( $_SERVER['PHP_SELF'] )  === 'login.php') echo "<li class='active'>"; else echo "<li>";
+                  echo "<a href='./login.php'><i class='fa fa-sign-in' aria-hidden='true'></i> Login</a></li>";
+                  if ( basename( $_SERVER['PHP_SELF'] )  === 'register.php') echo "<li class='active'>"; else echo "<li>";
+                  echo "<a href='./register.php'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> Register</a></li>";
                 }
 
                 if ( isset( $_SESSION['user_name'] ) ){
                   echo "<li><a href='admin/index.php'><i class='fa fa-tachometer' aria-hidden='true'></i> Dashboard</a></li>";
-                  echo "<li><a href='account.php'><i class='fa fa-user' aria-hidden='true'></i> " . $_SESSION['user_name'] . "</a></li>";
+                  if ( basename( $_SERVER['PHP_SELF'] )  === 'account.php') echo "<li class='active'>"; else echo "<li>";
+                  echo "<a href='account.php'><i class='fa fa-user' aria-hidden='true'></i> " . $_SESSION['user_name'] . "</a></li>";
                   echo "<li><a href='includes/logout.php'><i class='fa fa-sign-out' aria-hidden='true'></i> Log Out</a></li>";
                 }
                 ?>

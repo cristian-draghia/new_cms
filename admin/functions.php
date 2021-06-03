@@ -565,4 +565,135 @@ function display_authors( $selected_user_id ) {
   }
 }
 
+function display_graph( &$var_array, $graph ) {
+  global $connection;
+  echo "<div class='col-lg-3 col-md-6'>";
+  if ( $graph === 'Posts') {
+    echo "<div class='panel panel-primary'>";
+  } elseif ( $graph === 'Comments' ) {
+    echo " <div class='panel panel-green'>";
+  } elseif ( $graph === 'Users' ) {
+    echo "<div class='panel panel-yellow'>";
+  } elseif ( $graph === 'Categories' ) {
+    echo "<div class='panel panel-red'>";
+  }
+  ?>
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-xs-3">
+          <?php 
+            if ( $graph === 'Posts') {
+              echo "<i class='fa fa-file-text fa-5x'></i>";
+            } elseif ( $graph === 'Comments' ) {
+              echo "<i class='fa fa-comments fa-5x'></i>";
+            } elseif ( $graph === 'Users' ) {
+              echo "<i class='fa fa-users fa-5x'></i>";
+            } elseif ( $graph === 'Categories' ) {
+              echo "<i class='fa fa-list fa-5x'></i>";
+            }
+            
+            ?>
+          </div>
+          <div class="col-xs-9 text-right">
+          <?php
+            $post_results = select_graph( $graph );
+            foreach ( $post_results as $post) {
+              array_push($var_array, $post );
+            }
+          ?>
+          <div class='huge'><?php echo $post_results[0]; ?></div>
+            <div><?php echo $graph ?></div>
+          </div>
+        </div>
+      </div>
+      <a href="posts.php">
+        <div class="panel-footer">
+          <span class="pull-left">View Details</span>
+          <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+          <div class="clearfix"></div>
+        </div>
+      </a>
+  </div>
+</div>       
+<?php  
+}
+
+function select_graph( $graph ) {
+  global $connection;
+  switch ($graph) {
+    case 'Posts': {
+        //Count how many posts
+        $posts_count_query = "SELECT * FROM posts";
+        $posts_count_query_result = mysqli_query( $connection, $posts_count_query );
+        confirm_query( $posts_count_query_result );
+        $posts_count = mysqli_num_rows( $posts_count_query_result );
+        //Count published and draft posts
+        $posts_published = 0;
+        $posts_draft = 0;
+        while ( $row = mysqli_fetch_assoc( $posts_count_query_result ) ) {
+          if ( $row['post_status'] === 'published' ) {
+            $posts_published++;
+          } else {
+            $posts_draft++;
+          }
+        }
+        return array( $posts_count, $posts_published, $posts_draft );
+      }
+    break;
+
+    case 'Comments': {
+      //Count how many comments
+      $coments_count_query = "SELECT * FROM comments";
+      $coments_count_query_result = mysqli_query( $connection, $coments_count_query );
+      confirm_query( $coments_count_query_result );
+      $coments_count = mysqli_num_rows( $coments_count_query_result );
+      //Count approved and unapproved comments
+      $comments_approved = 0;
+      $comments_unapproved = 0;
+      while ( $row = mysqli_fetch_assoc( $coments_count_query_result ) ) {
+        if ( $row['comment_status'] === 'approved' ) {
+          $comments_approved++;
+        } else {
+          $comments_unapproved++;
+        }
+      }
+      return array( $coments_count, $comments_approved, $comments_unapproved );
+    }
+    break;
+    
+    case 'Users': {
+       //Count how many users
+       $users_count_query = "SELECT * FROM users";
+       $users_count_query_result = mysqli_query( $connection, $users_count_query );
+       confirm_query( $users_count_query_result );
+       $users_count = mysqli_num_rows( $users_count_query_result );
+       //Count admin and subscriber users
+       $users_admin = 0;
+       $users_subscriber = 0;
+       while ( $row = mysqli_fetch_assoc( $users_count_query_result ) ) {
+        if ( $row['user_role'] === 'administrator' ) {
+          $users_admin++;
+        } else {
+          $users_subscriber++;
+        }
+       }
+       return array( $users_count, $users_admin, $users_subscriber );
+    }
+
+    case 'Categories': {
+      //Count how many categories
+      $categories_count_query = "SELECT * FROM categories";
+      $categories_count_query_result = mysqli_query( $connection, $categories_count_query );
+      confirm_query( $categories_count_query_result );
+      $categories_count = mysqli_num_rows( $categories_count_query_result );
+      return array( $categories_count );
+    }
+
+    
+    default:
+      break;
+  }
+
+}
+
 ?>

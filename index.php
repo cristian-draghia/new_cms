@@ -43,11 +43,13 @@
 
   <ul class="pager">
     <?php
-    for( $i = 1; $i <= $count_posts; $i++ ) {
-      if ($i == $page_number ) {
-        echo "<li><a class='page-active' href='index.php?page=$i'>$i</a></li>";
-      } else {
-        echo "<li><a href='index.php?page=$i'>$i</a></li>";
+    if ( $count_posts > 1 ) {
+      for( $i = 1; $i <= $count_posts; $i++ ) {
+        if ($i == $page_number ) {
+          echo "<li><a class='page-active' href='index.php?page=$i'>$i</a></li>";
+        } else {
+          echo "<li><a href='index.php?page=$i'>$i</a></li>";
+        }
       }
     }
     ?>  

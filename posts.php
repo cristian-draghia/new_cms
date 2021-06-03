@@ -16,16 +16,30 @@
       <?php 
       if ( isset( $_GET['post_id'] ) ) {
         $post_id = $_GET['post_id'];
-        
-        $query_update_view = "UPDATE posts SET post_views = post_views + 1 WHERE post_id = $post_id";
-        $query_update_view_result = query_result ( $query_update_view );
-
         $select_post_query = "SELECT * FROM posts WHERE post_id = {$post_id}";
-        display_posts( $select_post_query );
-        display_comments( $post_id ) ;
+        $select_post_query_result = query_result( $select_post_query );
+        while ( $row = mysqli_fetch_assoc( $select_post_query_result ) ) {
+          $post_status = escape( $row['post_status'] );
+          if ( $post_status ) {
+            $query_update_view = "UPDATE posts SET post_views = post_views + 1 WHERE post_id = $post_id";
+            $query_update_view_result = query_result ( $query_update_view );
+          }
+          display_posts( $select_post_query );
+          display_comments( $post_id, $post_status ) ;
+        }
+        //Return to post if id doesn't exist
+        if ( mysqli_num_rows( $select_post_query_result ) == 0 ) {
+          header("Location: posts.php");
+        }
+            
       } else {
-        $select_all_posts_query = "SELECT * FROM posts WHERE post_status = 'published' ORDER BY post_id DESC";
-        display_posts( $select_all_posts_query );
+        if ( isset( $_SESSION['user_role'] ) && $_SESSION['user_role'] == 'administrator' ) {
+          $select_all_posts_query = "SELECT * FROM posts ORDER BY post_id DESC";
+          display_posts( $select_all_posts_query );
+        } else {
+          $select_all_posts_query = "SELECT * FROM posts WHERE post_status = 'published' ORDER BY post_id DESC";
+          display_posts( $select_all_posts_query );
+        }
       }
       if ( isset( $_POST['create_comment'] ) ) {
         leave_comment(); 

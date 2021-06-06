@@ -1,4 +1,4 @@
-<?php 
+<?php ob_start();
 
 $db = array(
   'db_host' => 'localhost',

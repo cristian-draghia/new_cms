@@ -123,8 +123,35 @@ if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== '
       
       echo "</td>";
       echo "<td>$post_date</td>";
-      echo "<td><a href='posts.php?source=edit_post&post_id={$post_id}'>Edit</a></td>";
-      echo "<td><a rel='$post_id' href='javascript:void(0)' class='delete_link'>Delete</a></td>";
+      // echo "<td><a href='posts.php?source=edit_post&post_id={$post_id}'>Edit</a></td>";
+      
+      ?>
+
+<td>
+      <form action="posts.php?source=edit_post" method="post">
+      
+      <input type="hidden" name="post_id" value="<?php echo $post_id; ?>">
+      <input class="btn btn-primary" type="submit" name="edit_post" value="Edit">
+
+      </form>
+      </td>
+      
+      <td>
+      <form action="" method="post">
+      
+      <input type="hidden" name="post_id" value="<?php echo $post_id; ?>">
+      <input class="btn btn-danger" type="submit" name="delete_post" value="Delete">
+
+      </form>
+      </td>
+
+      <?php
+      
+
+      // echo "<td><a rel='$post_id' href='javascript:void(0)' class='delete_link'>Delete</a></td>";
+
+
+
       echo "<td>$post_views</td>";
       echo "</tr>";
 
@@ -151,6 +178,5 @@ if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== '
     });
 
   });
-
 
 </script>

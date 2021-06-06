@@ -67,7 +67,7 @@ if ( isset( $_POST['update_user'] ) ) {
     }
   }
   
-  header( "Location: users.php?source=edit_user&user_id=$user_id");
+  // header( "Location: users.php?source=edit_user&user_id=$user_id");
 
 }
 

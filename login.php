@@ -49,6 +49,10 @@ if ( isset( $_POST['login'] ) ) {
   }
 }
 
+if ( isset( $_GET['user_name'] ) ) {
+  $new_user_name =  $_GET['user_name'];
+}
+
 
 ?>
 
@@ -68,7 +72,8 @@ if ( isset( $_POST['login'] ) ) {
        
                 ?>
                 <div class="form-group">
-                  <input type="text" name="user_name" id="username" class="form-control" placeholder="Username or Email">
+                  <input type="text" name="user_name" id="username" class="form-control" placeholder="Username or Email"
+                  autocomplete="on" value="<?php echo ( isset( $new_user_name) ? $new_user_name : '') ?>">
                 </div>
                 <div class="form-group">
                   <input type="password" name="user_password" id="password" class="form-control" placeholder="Password">

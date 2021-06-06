@@ -28,7 +28,7 @@
         echo "<h2>Category: $post_category_name</h2>";
         display_posts( $select_post_category_query );
       } else {
-        if ( isset( $_SESSION['user_role'] ) && $_SESSION['user_role'] == 'administrator' ) {
+        if ( is_admin( $_SESSION['user_name'] ) ) {
           $select_all_categories_query = "SELECT * FROM posts GROUP BY post_category_id ORDER BY post_category_id DESC";
         } else {
           $select_all_categories_query = "SELECT * FROM posts WHERE post_status = 'published' GROUP BY post_category_id ORDER BY post_category_id DESC";
@@ -40,7 +40,7 @@
           $post_category_name = get_post_category( $post_category_id );
           echo "<h2>Category: <a href='categories.php?category_id=$post_category_id'>$post_category_name</a></h2>";
           //Select each individual post for this category
-          if ( isset( $_SESSION['user_role'] ) && $_SESSION['user_role'] == 'administrator' ) {
+          if ( is_admin( $_SESSION['user_name'] ) ) {
             $select_category_posts_query = "SELECT * FROM posts WHERE post_category_id = $post_category_id";
           } else {
             $select_category_posts_query = "SELECT * FROM posts WHERE post_status = 'published' AND post_category_id = $post_category_id";

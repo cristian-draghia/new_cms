@@ -4,7 +4,7 @@ $db = array(
   'db_host' => 'localhost',
   'db_user' => 'root',
   'db_pass' => '',
-  'db_name' => 'cms',
+  'db_name' => 'new_cms',
 );
 
 foreach ( $db as $key => $value ) {

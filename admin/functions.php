@@ -174,7 +174,7 @@ function update_post( $post_id, $post_category_id, $post_title, $post_author_id,
   $query_result = query_result( $query );
   // header("Location: posts.php");
   echo "<h3 class='bg-success'>Post has been updated.</h3>
-  <h4>Click <a href='../post.php?post_id=$post_id'>here</a> to view current post or <a href='./posts.php'>here</a> to view all posts.</h4>";
+  <h4>Click <a href='/new_cms/posts/$post_id'>here</a> to view current post or <a href='/new_cms/admin/posts'>here</a> to view all posts.</h4>";
 
 }
 
@@ -203,7 +203,7 @@ function delete_query( $table, $column, $value ) {
 
 function delete_category() {
   global $connection;
-  if( isset( $_GET['delete'] ) && $_SESSION['user_role'] === 'administrator'  ) {
+  if( isset( $_GET['delete'] ) && is_admin( $_SESSION['user_name'] ) ) {
     $cat_id = escape( $_GET['delete'] );
     delete_query( 'categories', 'cat_id', $cat_id );
     $select_all_posts_query = "SELECT * FROM posts WHERE post_category_id = $cat_id";
@@ -212,17 +212,17 @@ function delete_category() {
       $update_category_query = "UPDATE posts SET post_category_id = 1";
       $update_category_query_result = query_result( $update_category_query );
     }
-    header("Location: categories.php");
+    header("Location: /new_cms/admin/categories");
   }
 }
 
 function delete_post() {
   global $connection;
-  if ( isset( $_POST['delete_post'] ) && $_SESSION['user_role'] === 'administrator' ) {
+  if ( isset( $_POST['delete_post'] ) && is_admin($_SESSION['user_name'])) {
     $post_id = escape( $_POST['post_id'] );
     delete_query( 'posts', 'post_id', $post_id );
     delete_post_comments( $post_id );
-    header("Location: posts.php");
+    header("Location: /new_cms/admin/posts");
   }
 }
 
@@ -238,14 +238,14 @@ function delete_post_comments( $post_id ) {
 
 function delete_comment() {
   global $connection;
-  if ( isset( $_GET['delete'] ) && $_SESSION['user_role'] === 'administrator' ) {
+  if ( isset( $_GET['delete'] ) && is_admin( $_SESSION['user_name'] ) ) {
     $comment_id = escape( $_GET['delete'] );
     $post_id = escape( $_GET['post_id'] );
     delete_query( 'comments ', 'comment_id', $comment_id );
     if ( isset( $_GET['post_id'] ) ) {
-      header("Location: comments.php?post_id=$post_id"); 
+      header("Location: /new_cms/admin/comments.php?post_id=$post_id"); 
     } else {
-      header("Location: comments.php"); 
+      header("Location: /new_cms/admin/comments"); 
     }
   }
 }
@@ -318,7 +318,7 @@ function update_post_status() {
     $post_id = escape( $_GET['post_id'] );
     $update_post_status_query = "UPDATE posts SET post_status = '$post_status' WHERE  post_id = $post_id";
     $update_post_status_query_result = query_result( $update_post_status_query );
-    header("Location: posts.php");
+    header("Location: /new_cms/admin/posts");
   }
 
 }
@@ -350,9 +350,9 @@ function update_comment_status() {
     $update_comment_status_query_result = query_result( $update_comment_status_query );
     if ( isset( $_GET['post_id'] ) ) {
       $post_id = escape( $_GET['post_id'] );
-      header("Location: comments.php?post_id=$post_id");
+      header("Location: /new_cms/admin/comments/$post_id");
     } else {
-      header("Location: comments.php");
+      header("Location: /new_cms/admin/comments");
     }
     
   }
@@ -362,7 +362,7 @@ function update_comment_status() {
 
 function delete_user() {
   global $connection;
-  if ( isset( $_GET['delete'] ) && $_SESSION['user_role'] === 'administrator' ) {
+  if ( isset( $_GET['delete'] ) && is_admin( $_SESSION['user_name'] ) ) {
     $delete_user_id = escape( $_GET['delete'] );
     $get_user_posts = "SELECT * FROM posts WHERE post_author_id = $delete_user_id";
     $get_user_posts_result = query_result ( $get_user_posts );
@@ -372,7 +372,7 @@ function delete_user() {
     }
     $delete_user_query = "DELETE FROM users WHERE user_id = $delete_user_id";
     $delete_user_query_result = query_result( $delete_user_query );
-    header("Location: users.php");
+    header("Location: /new_cms/admin/users");
   }
 }
 
@@ -389,7 +389,7 @@ function update_user_role() {
       $_SESSION['user_role'] = $user_role;
     }
 
-    header("Location: users.php");
+    header("Location: /new_cms/admin/users");
 
   }
 
@@ -452,7 +452,7 @@ function create_single_post( $post_id, $post_category_id, $post_category_name, $
         if ( isset( $_GET['post_id'] ) ) {
           echo "$post_title";
         } else {
-          echo "<a href='posts.php?post_id=$post_id'>$post_title</a>";
+          echo "<a href='posts/$post_id'>$post_title</a>";
         }
       ?>
       </h2>
@@ -461,7 +461,7 @@ function create_single_post( $post_id, $post_category_id, $post_category_name, $
         if ( isset( $_GET['author_id'] ) ) {
           echo "Done by: $post_author_name";
         } else {
-          echo "Done by: <a href='authors.php?author_id=$post_author_id'>$post_author_name</a>";
+          echo "Done by: <a href='/new_cms/authors/$post_author_id'>$post_author_name</a>";
         }
         ?>
       </p>
@@ -474,16 +474,16 @@ function create_single_post( $post_id, $post_category_id, $post_category_name, $
       <hr>
       <?php
         if ( isset( $_GET['post_id'] ) ) {
-          echo "<img class='img-responsive' src='images/$post_image' alt=''>";
+          echo "<img class='img-responsive' src='/new_cms/images/$post_image' alt=''>";
         } else {
-          echo "<a href='posts.php?post_id=$post_id'><img class='img-responsive' src='images/$post_image' alt=''></a>";
+          echo "<a href='/new_cms/posts/$post_id'><img class='img-responsive' src='/new_cms/images/$post_image' alt=''></a>";
         }
       ?>
       <hr>
       <p><?php echo $post_content; ?></p>
       <?php 
         if ( !isset( $_GET['post_id'] ) ) {
-          echo "<a class='btn btn-primary' href='posts.php?post_id=$post_id'>Read More <span class='glyphicon glyphicon-chevron-right'></span></a>";
+          echo "<a class='btn btn-primary' href='/new_cms/posts/$post_id'>Read More <span class='glyphicon glyphicon-chevron-right'></span></a>";
         }
       ?>  
       <hr>
@@ -492,7 +492,7 @@ function create_single_post( $post_id, $post_category_id, $post_category_name, $
         if ( isset( $_GET['category_id'] ) ) {
           echo "Category: $post_category_name";
         } else {
-          echo "Category: <a href='categories.php?category_id=$post_category_id'>$post_category_name</a>";
+          echo "Category: <a href='/new_cms/categories/$post_category_id'>$post_category_name</a>";
         }
 
       ?>
@@ -501,7 +501,7 @@ function create_single_post( $post_id, $post_category_id, $post_category_name, $
   <?php
   //Return to post if post is draft and user not admin
   } elseif ( $post_status === 'draft') {
-    header("Location: posts.php");
+    header("Location: /new_cms/posts");
   }
   
 }
@@ -520,7 +520,7 @@ function display_posts( $query ) {
     
     $post_date = escape( $row['post_date'] );
     $post_image = escape( $row['post_image'] );
-    if ( empty( $_GET ) ) {
+    if ( empty( $_GET ) || basename( $_SERVER['PHP_SELF'] )  === 'categories.php') {
       $post_content = substr(escape( $row['post_content'] ), 0, 100);
     } else {
       $post_content = escape( $row['post_content'] );

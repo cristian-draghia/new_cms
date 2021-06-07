@@ -2,11 +2,15 @@
 <?php  include "includes/header.php"; ?>
 <?php
   if( !isset( $_SESSION['user_name'] ) ) { 
-    header("Location: login.php");
+    header("Location: /new_cms/login");
   }
   if ( !isset( $_GET['user_id'] ) ) {
     header("Location: account.php?user_id=" . $_SESSION['user_id']);
   }
+  if ( isset( $_GET['user_id'] ) && $_SESSION['user_id'] !== $_GET['user_id'] ) {
+    header("Location: /new_cms");
+  }
+
 ?>
 
 <!-- Navigation -->

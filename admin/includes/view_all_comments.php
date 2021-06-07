@@ -74,7 +74,7 @@
       while ($row = mysqli_fetch_assoc( $select_post_id ) ) {
         $comment_post_title = $row['post_title'];
         $comment_post_id = $row['post_id'];
-        echo "<td><a href='../posts.php?post_id={$comment_post_id}'>$comment_post_title</a></td>";
+        echo "<td><a href='/new_cms//posts/{$comment_post_id}'>$comment_post_title</a></td>";
       }
 
       echo "<td>$comment_date</td>";

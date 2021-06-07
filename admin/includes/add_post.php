@@ -35,7 +35,7 @@
       $post_id = mysqli_insert_id( $connection);
 
       echo "<h3 class='bg-success'>Post has been created.</h3>
-      <h4>Click <a href='../posts.php?post_id=$post_id'>here</a> to view current post or <a href='./posts.php'>here</a> to view all posts.</h4>";
+      <h4>Click <a href='/new_cms/posts/$post_id'>here</a> to view current post or <a href='/new_cms/admin/posts'>here</a> to view all posts.</h4>";
     }
 
 

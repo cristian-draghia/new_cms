@@ -19,13 +19,10 @@
       if ( isset( $_GET['author_id'] ) ) {
 
         $post_author_id = $_GET['author_id'];
-        $post_author_name = get_author_name( $post_author_id   );
+        $post_author_name = get_author_name( $post_author_id );
         $select_post_author_query = "SELECT * FROM posts WHERE post_status = 'published' AND post_author_id = $post_author_id";
         echo "<h2>Author: $post_author_name</h2>";
         display_posts( $select_post_author_query );
-     
-
-
       } else {
       
         $select_all_authors_query = "SELECT * FROM posts WHERE post_status = 'published' GROUP BY post_author_id ORDER BY post_author_id DESC ";
@@ -35,7 +32,7 @@
         while ( $row = mysqli_fetch_array( $select_all_authors_query_result ) ) {
           $post_author_id = $row['post_author_id'];
           $post_author_name = get_author_name( $post_author_id );
-          echo "<h2>Author: <a href='authors.php?author_id=$post_author_id'>$post_author_name</a></h2>";
+          echo "<h2>Author: <a href='new_cms/authors/$post_author_id'>$post_author_name</a></h2>";
           //Select each individual post for this category
           $select_category_posts_query = "SELECT * FROM posts WHERE post_status = 'published' AND post_author_id = $post_author_id";
           display_posts( $select_category_posts_query );

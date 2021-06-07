@@ -44,7 +44,7 @@
       
       ?> 
 
-      <form action="users.php?&user_id=<?php echo $user_id ?>" method="post" >
+      <form action="/new_cms/admin/users?&user_id=<?php echo $user_id ?>" method="post" >
 
       <select class="form-control" name="updated_user_role" id="updated_user_role" onchange='this.form.submit()'>
 
@@ -67,7 +67,7 @@
       
       <?php
         echo "</td>";
-        echo "<td><a href='users.php?source=edit_user&user_id=$user_id'>Edit</a></td>";
+        echo "<td><a href='/new_cms/admin/users?source=edit_user&user_id=$user_id'>Edit</a></td>";
         echo "<td><a rel='$user_id' href='javascript:void(0)' class='delete_link'>Delete</a></td>";
         // echo "<td><a href='users.php?delete=$user_id' OnClick=\"return confirm( 'Are you sure you want to delete this user?' );\">Delete</a></td>";
         echo "</tr>";
@@ -92,7 +92,7 @@
   $(document).ready(function() {
     $(".delete_link").on("click", function() {
       var id = $(this).attr("rel");
-      var delete_url ="users.php?delete=" + id;
+      var delete_url ="/new_cms/admin/users?delete=" + id;
 
       $(".modal-delete_link").attr("href", delete_url);
       $("#myModal").modal("show");

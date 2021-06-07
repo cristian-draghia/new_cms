@@ -37,7 +37,7 @@ if ( isset( $_POST['login'] ) ) {
 
     set_new_session($db_user_id, $db_user_name, $db_user_firstname, $db_user_lastname, $db_user_email,$db_user_image, $db_user_role );
 
-    header("Location: admin/index.php");
+    header("Location: /new_cms/admin/index");
     } else {     
       $message = "The password is wrong";
     }

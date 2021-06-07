@@ -91,7 +91,7 @@ if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== '
       echo "<td><input class='form-control check_box' type='checkbox' name='posts[]' value='$post_id'></td>";
       echo "</form>";
       echo "<td>$post_author_name</td>";
-      echo "<td><a href='../posts.php?post_id=$post_id'>$post_title</a></td>";
+      echo "<td><a href='/new_cms/posts/$post_id'>$post_title</a></td>";
       echo "<td>$post_category_name</td>";
       echo "<td>";
       ?>
@@ -123,7 +123,7 @@ if ( isset( $_POST['submit_bulk_option'] ) && $_POST['select_bulk_option'] !== '
       
       echo "</td>";
       echo "<td>$post_date</td>";
-      echo "<td><a href='posts.php?source=edit_post&post_id={$post_id}'>Edit</a></td>";
+      echo "<td><a href='posts?source=edit_post&post_id={$post_id}'>Edit</a></td>";
       
       ?>
       

@@ -46,9 +46,9 @@
     if ( $count_posts > 1 ) {
       for( $i = 1; $i <= $count_posts; $i++ ) {
         if ($i == $page_number ) {
-          echo "<li><a class='page-active' href='index.php?page=$i'>$i</a></li>";
+          echo "<li><a class='page-active' href='/new_cms/index?page=$i'>$i</a></li>";
         } else {
-          echo "<li><a href='index.php?page=$i'>$i</a></li>";
+          echo "<li><a href='/new_cms/index?page=$i'>$i</a></li>";
         }
       }
     }

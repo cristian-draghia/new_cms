@@ -25,11 +25,11 @@
             $query_update_view_result = query_result ( $query_update_view );
           }
           display_posts( $select_post_query );
-          display_comments( $post_id, $post_status ) ;
+          display_comments( $post_id, $post_status );
         }
         //Return to post if id doesn't exist
         if ( mysqli_num_rows( $select_post_query_result ) == 0 ) {
-          header("Location: posts.php");
+          header("Location: /new_cms/posts");
         }
             
       } else {

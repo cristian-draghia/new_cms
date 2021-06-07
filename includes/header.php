@@ -17,10 +17,10 @@
     <title>Blog Home - Start Bootstrap Template</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="/new_cms/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="css/blog-home.css?v=<?php echo time(); ?>" rel="stylesheet" type="text/css" />
+    <link href="/new_cms/css/blog-home.css?v=<?php echo time(); ?>" rel="stylesheet" type="text/css" />
 
     <!-- Custom Fonts -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>

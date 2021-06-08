@@ -1,6 +1,8 @@
 <?php  include "includes/db.php"; ?>
 <?php  include "includes/header.php"; ?>
 
+<?php checkIfUserIsLoggedInAndRedirect( "/new_cms/index" ); ?>
+
 <!-- Navigation -->
 
 <?php  include "includes/navigation.php"; ?>

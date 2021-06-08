@@ -1,5 +1,31 @@
 <?php
 
+function redirect( $location ) {
+  header( "Location: " . $location);
+  exit;
+}
+
+function ifItIsMethod( $method = null ) {
+  if ($_SERVER['REQUEST_METHOD'] == strtoupper( $method ) ) {
+    return true;
+  } 
+  return false;
+}
+
+function isLoggedIn( $session ) {
+  if ( isset( $_SESSION[ $session ] ) ) {
+    return true;
+  }
+  return false;
+}
+
+function checkIfUserIsLoggedInAndRedirect( $redirectLocation =null ) {
+  if ( isLoggedIn( 'user_name' ) ) {
+    redirect( $redirectLocation );
+  }
+
+}
+
 function escape( $string ) {
   global $connection;
   return mysqli_real_escape_string( $connection, trim( $string ) );

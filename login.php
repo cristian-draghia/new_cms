@@ -4,10 +4,7 @@
   if (!isset( $_SESSION ) ) { 
     session_start(); 
   } 
-
-  if ( isset( $_SESSION['user_name'] ) ) {
-    header("Location: index.php");
-  }
+  checkIfUserIsLoggedInAndRedirect( "/new_cms/index" );
 ?>
 
 
@@ -53,7 +50,6 @@ if ( isset( $_GET['user_name'] ) ) {
   $new_user_name =  $_GET['user_name'];
 }
 
-
 ?>
 
 <!-- Page Content -->
@@ -64,7 +60,7 @@ if ( isset( $_GET['user_name'] ) ) {
         <div class="col-xs-6 col-xs-offset-3">
           <div class="form-wrap">
             <h1 class="text-center">Login</h1>
-              <form role="form" action="login.php" method="post" id="login-form" autocomplete="off">
+              <form role="form" action="" method="post" id="login-form" autocomplete="off">
                 <?php 
                   if ( !empty($message) ) {
                     echo "<h5 class='error_message'>$message</h5>";
@@ -79,6 +75,7 @@ if ( isset( $_GET['user_name'] ) ) {
                   <input type="password" name="user_password" id="password" class="form-control" placeholder="Password">
                 </div>
                   <input type="submit" name="login" id="btn-login" class="btn btn-custom btn-lg btn-block register-btn" value="Login">
+                  <div class="text-center"><a href="/new_cms/forgot_password?forgot=<?php echo uniqid(true); ?>">Forgot Password</a></div>
               </form>
           </div>
         </div> <!-- /.col-xs-12 -->

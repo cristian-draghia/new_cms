@@ -18,30 +18,31 @@
                 if ( basename( $_SERVER['PHP_SELF'] )  === 'posts.php' && empty( $_GET ) ) echo "<li class='active'>"; else echo "<li>";
                 echo "<a href='/new_cms/posts'>All posts</a></li>";
                 //Edit Post Button
-                if ( isset( $_SESSION['user_role'] ) && $_SESSION['user_role'] === 'administrator' && isset( $_GET['post_id'] ) )  {
+                if ( isLoggedIn( 'user_role' ) && $_SESSION['user_role'] === 'administrator' && isset( $_GET['post_id'] ) )  {
                   $post_id = $_GET['post_id'];
                   echo "<li><a href='/new_cms/admin/posts?source=edit_post&post_id=$post_id'>Edit Post</a></li>";
                 }
                 ?>
                 </ul>
                 <!--Right side elements-->
+
                 <ul class="nav navbar-nav navbar-right">
+                <!-- Contact page -->
                 <?php if ( basename( $_SERVER['PHP_SELF'] )  === 'contact.php') echo "<li class='active'>"; else echo "<li>";?>
                 <a href="/new_cms/contact"><i class="fa fa-pencil-square" aria-hidden="true"></i> Contact</a></li>
                 <?php 
-                if ( !isset( $_SESSION['user_name'] ) ) {
+                if ( !isLoggedIn( 'user_name' ) ) {
                   if ( basename( $_SERVER['PHP_SELF'] )  === 'login.php') echo "<li class='active'>"; else echo "<li>";
                   echo "<a href='/new_cms/login'><i class='fa fa-sign-in' aria-hidden='true'></i> Login</a></li>";
                   if ( basename( $_SERVER['PHP_SELF'] )  === 'register.php') echo "<li class='active'>"; else echo "<li>";
                   echo "<a href='/new_cms/register'><i class='fa fa-pencil-square-o' aria-hidden='true'></i> Register</a></li>";
-                }
-
-                if ( isset( $_SESSION['user_name'] ) ){
+                } else {
                   echo "<li><a href='/new_cms/admin/'><i class='fa fa-tachometer' aria-hidden='true'></i> Dashboard</a></li>";
                   if ( basename( $_SERVER['PHP_SELF'] )  === 'account.php') echo "<li class='active'>"; else echo "<li>";
                   echo "<a href='/new_cms/account.php'><i class='fa fa-user' aria-hidden='true'></i> " . $_SESSION['user_name'] . "</a></li>";
                   echo "<li><a href='/new_cms/includes/logout'><i class='fa fa-sign-out' aria-hidden='true'></i> Log Out</a></li>";
                 }
+                
                 ?>
               </ul>
             </div>

@@ -1,6 +1,6 @@
 RewriteEngine on
 
-RewriteRule ^(index|contact|register|login|posts|categories|includes/logout)$ $1.php [NC,L]
+RewriteRule ^(index|contact|register|login|posts|categories|includes/logout|forgot_password)$ $1.php [NC,L]
 
 RewriteRule ^(admin/index|admin/users|admin/posts|admin/categories|admin/comments)$ $1.php [NC,L]
 

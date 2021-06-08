@@ -34,10 +34,13 @@ if ( !isset($_SESSION['user_name'] ) ) {
         <input class="form-control" type="password" name="user_password" placeholder="Enter password">
     </div>
     <div class="form-group">
-    <input class="form-control login-button" type="submit" name="login" value="Login">
-  </div>
+      <input class="form-control login-button" type="submit" name="login" value="Login">
+    </div>
+    <div class=" text-center"><a href="/new_cms/forgot_password?forgot=<?php echo uniqid(true); ?>">Forgot Password</a></div>
     </form>
+      
 </div>
+
 
 <?php 
 } else {
@@ -53,10 +56,6 @@ if ( !isset($_SESSION['user_name'] ) ) {
 </div>
 
     <?php
-
-
-
-
 }
 ?>
 

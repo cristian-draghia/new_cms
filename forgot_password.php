@@ -1,3 +1,15 @@
+<?php 
+//Import PHPMailer classes into the global namespace
+//These must be at the top of your script, not inside a function
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+//Load Composer's autoloader
+require 'vendor/autoload.php';
+require 'classes/Config.php';
+?>
+
 <?php  include "includes/db.php"; ?>
 <?php  include "includes/header.php"; ?>
 <?php
@@ -37,6 +49,44 @@ if ( ifItIsMethod('post') ) {
       mysqli_stmt_bind_param( $stmt_udpdate, 's', $user_email);
       mysqli_stmt_execute( $stmt_udpdate );
       mysqli_stmt_close( $stmt_udpdate );
+
+      //MAIL
+      $mail = new PHPMailer(true);
+
+      try {
+        //Server settings
+        // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      
+        $mail->isSMTP();                                           
+        $mail->Host       = Config::SMTP_HOST;
+        $mail->Username   = Config::SMTP_USER;                     
+        $mail->Password   = Config::SMTP_PASSWORD;    
+        $mail->Port       = Config::SMTP_PORT; 
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;              
+        $mail->SMTPAuth   = true;     
+        $mail->isHTML(true);
+        
+        //Recipients
+        $mail->setFrom('draghiacristian97@gmail.com', 'Mailer');
+        $mail->addAddress($user_email);
+
+        //Content
+        $mail->Subject = 'This is test email';
+        $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
+        $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+        if( $mail->send() ) {
+          echo "It was sent";
+        } else {
+          echo "It wasn't me";
+        }
+
+
+       
+      } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+      }
+
+
     }
     mysqli_stmt_close( $stmt_select );
 

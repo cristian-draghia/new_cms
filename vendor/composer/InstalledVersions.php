@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '7d05242ef0a1ea7314bed3d7e382ba4009288085',
+    'reference' => '15a9df13447ee0bf5b22cb66f0e615523923c58e',
     'name' => '__root__',
   ),
   'versions' => 
@@ -44,7 +44,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '7d05242ef0a1ea7314bed3d7e382ba4009288085',
+      'reference' => '15a9df13447ee0bf5b22cb66f0e615523923c58e',
     ),
     'guzzlehttp/guzzle' => 
     array (
@@ -72,6 +72,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'dc960a912984efb74d0a90222870c72c87f10c91',
+    ),
+    'phpmailer/phpmailer' => 
+    array (
+      'pretty_version' => 'v6.4.1',
+      'version' => '6.4.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '9256f12d8fb0cd0500f93b19e18c356906cbed3d',
     ),
     'psr/http-client' => 
     array (

@@ -65,7 +65,6 @@ if ( isset( $_GET['user_name'] ) ) {
                   if ( !empty($message) ) {
                     echo "<h5 class='error_message'>$message</h5>";
                   }
-       
                 ?>
                 <div class="form-group">
                   <input type="text" name="user_name" id="username" class="form-control" placeholder="Username or Email"

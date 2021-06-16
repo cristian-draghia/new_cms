@@ -7,7 +7,6 @@ use PHPMailer\PHPMailer\Exception;
 
 //Load Composer's autoloader
 require 'vendor/autoload.php';
-require 'classes/Config.php';
 ?>
 
 <?php  include "includes/db.php"; ?>
@@ -18,10 +17,9 @@ require 'classes/Config.php';
   } 
   checkIfUserIsLoggedInAndRedirect("/new_cms/index");
 
-  if ( !ifItIsMethod('get')  && !isset( $_GET['forgot'] ) ) {
+  if ( !isset( $_GET['forgot'] ) ) {
     redirect("/new_cms/index");
   }
-
 
 ?>
 
@@ -40,7 +38,7 @@ if ( ifItIsMethod('post') ) {
     $stmt_select = mysqli_prepare( $connection, "SELECT user_email FROM users WHERE user_email = ?");
     mysqli_stmt_bind_param( $stmt_select, 's', $user_email);
     mysqli_stmt_execute( $stmt_select );
-    mysqli_stmt_store_result($stmt_select);
+    mysqli_stmt_store_result( $stmt_select );
 
     if ( mysqli_stmt_num_rows ( $stmt_select ) == 0 ) {
       $message = "An account with this email doesn't exist";
@@ -64,6 +62,7 @@ if ( ifItIsMethod('post') ) {
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;              
         $mail->SMTPAuth   = true;     
         $mail->isHTML(true);
+        $mail->CharSet = 'UTF-8';
         
         //Recipients
         $mail->setFrom('draghiacristian97@gmail.com', 'Mailer');
@@ -71,11 +70,18 @@ if ( ifItIsMethod('post') ) {
 
         //Content
         $mail->Subject = 'This is test email';
-        $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
+     
+        $mail->Body    = '<p>Please click to reset your password
+        
+        <a href="http://localhost:80/new_cms/reset.php?email=' . $user_email. '&token=' . $token .'">http://localhost:80/new_cms/reset.php?email=' . $user_email. '&token=' . $token .'</a>
+        
+        </p>';
+      
         $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
         if( $mail->send() ) {
-          echo "It was sent";
+          $email_sent = true;
+          
         } else {
           echo "It wasn't me";
         }
@@ -115,6 +121,7 @@ if ( ifItIsMethod('post') ) {
                 </div>
                 <input type="submit" name="forgot_password" id="btn-login" class="btn btn-custom btn-lg btn-block register-btn" value="Reset Password">
               </form>
+              <?php if (isset ( $email_sent ) ) echo "<h3 class='text-center'>Check your Email</h3"; ?>
           </div>
         </div> <!-- /.col-xs-12 -->
       </div> <!-- /.row -->

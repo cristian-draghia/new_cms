@@ -39,9 +39,10 @@
       echo "<td>$user_firstname</td>";
       echo "<td>$user_lastname</td>";
       echo "<td>$user_email</td>";
-      if ( $user_id !== '1' ) {
+      $current_user_id = $_SESSION['user_id'];
+      if ( $user_id == $current_user_id || $user_role=='subscriber' || $current_user_id == 1) {
+      if ($_SESSION['user_role'] !== 'subscriber') {
       echo "<td>"; 
-      
       ?> 
 
       <form action="/new_cms/admin/users?&user_id=<?php echo $user_id ?>" method="post" >
@@ -65,8 +66,12 @@
 
       </form>
       
+      
       <?php
         echo "</td>";
+      } else {
+        echo "<td>$user_role</td>";
+      }
         echo "<td><a href='/new_cms/admin/users?source=edit_user&user_id=$user_id'>Edit</a></td>";
         echo "<td><a rel='$user_id' href='javascript:void(0)' class='delete_link'>Delete</a></td>";
         // echo "<td><a href='users.php?delete=$user_id' OnClick=\"return confirm( 'Are you sure you want to delete this user?' );\">Delete</a></td>";

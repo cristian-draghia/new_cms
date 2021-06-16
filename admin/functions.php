@@ -102,7 +102,7 @@ function register_user( &$user_name, &$user_email, &$message, &$message_state) {
         if ( basename( $_SERVER['PHP_SELF'] )  === 'register.php') {
           $message .= "<br>Click <a href='login.php?user_name=$user_name'>here</a> to log in";
         }
-        $message_state = "corret";
+        $message_state = "correct";
       }
         
     }

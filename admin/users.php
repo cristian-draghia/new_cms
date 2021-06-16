@@ -1,9 +1,7 @@
 <?php include 'includes/admin_header.php' ?>
 
 <?php 
-if ( !is_admin( $_SESSION['user_name'] ) ) {
-  header("Location: index.php");
-}
+
 ?>
 
 
@@ -30,8 +28,12 @@ if ( !is_admin( $_SESSION['user_name'] ) ) {
           }
 
           switch ($source) {
-            case 'add_user':
+            case 'add_user': {
+              if ( !is_admin( $_SESSION['user_name'] ) ) {
+                header("Location: index.php");
+              }
               include 'includes/add_user.php';
+            }
               break;
             
             case 'edit_user':

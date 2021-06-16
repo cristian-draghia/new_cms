@@ -2,5 +2,13 @@
     "require": {
         "wildbit/postmark-php": "^4.0",
         "phpmailer/phpmailer": "^6.4"
+    },
+
+    "autoload": {
+
+        "classmap": [
+            "classes"
+        ]
+
     }
 }

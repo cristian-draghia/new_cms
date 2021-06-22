@@ -26,6 +26,31 @@ function checkIfUserIsLoggedInAndRedirect( $redirectLocation =null ) {
 
 }
 
+function get_logged_user_id() {
+  if (isLoggedIn('user_id') ) {
+    return $_SESSION['user_id'];
+  }
+  return false;
+}
+
+function user_liked_post( $post_id = '' ) {
+  $user_id = get_logged_user_id();
+  $select_liked_post_query = "SELECT * FROM likes WHERE post_id = $post_id AND user_id = $user_id";
+  $select_liked_post_query_result = query_result( $select_liked_post_query );
+  if ( mysqli_num_rows( $select_liked_post_query_result ) > 0 ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function get_post_likes ( $post_id = '' ) {
+  $select_liked_post_query = "SELECT * FROM likes WHERE post_id = $post_id";
+  $select_liked_post_query_result = query_result( $select_liked_post_query );
+  return mysqli_num_rows( $select_liked_post_query_result );
+}
+
+
 function escape( $string ) {
   global $connection;
   return mysqli_real_escape_string( $connection, trim( $string ) );
@@ -507,12 +532,37 @@ function create_single_post( $post_id, $post_category_id, $post_category_name, $
       ?>
       <hr>
       <p><?php echo $post_content; ?></p>
+      <hr>
       <?php 
         if ( !isset( $_GET['post_id'] ) ) {
           echo "<a class='btn btn-primary' href='/new_cms/posts/$post_id'>Read More <span class='glyphicon glyphicon-chevron-right'></span></a>";
+        } else {
+          #Likes
+          if ( isLoggedIn('user_id') ) {
+            if ( user_liked_post( $post_id ) ) {
+          ?>
+          <div class="row">
+            <p class="pull-right"><a class="unlike" href=""><span class="glyphicon glyphicon-thumbs-down"
+            data-toggle="tooltip" data-placement="top" title="You liked this before"></span>Unlike</a></p>
+          </div>
+          <?php } else { ?>
+          <div class="row">
+            <p class="pull-right"><a class="like" href=""><span class="glyphicon glyphicon-thumbs-up"
+            data-toggle="tooltip" data-placement="top" title="You can like this"></span>Like</a></p>
+          </div>
+          <?php } } else { ?>
+          <div class="row">
+            <p class="pull-right">You need to <a href="/new_cms/login">login</a> to like this</p>
+          </div>
+          <?php } ?>
+          <div class="row">
+            <p class="pull-right">Like: <?php echo get_post_likes( $post_id ); ?></p>
+          </div>
+          <?php
         }
       ?>  
       <hr>
+    
       <p>
       <?php 
         if ( isset( $_GET['category_id'] ) ) {
@@ -520,8 +570,8 @@ function create_single_post( $post_id, $post_category_id, $post_category_name, $
         } else {
           echo "Category: <a href='/new_cms/categories/$post_category_id'>$post_category_name</a>";
         }
-
       ?>
+      </p>
     </div>
 
   <?php

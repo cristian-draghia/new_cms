@@ -5,6 +5,33 @@
 
 <?php include 'includes/navigation.php';?>
 
+
+<?php 
+
+if ( isset( $_POST['liked'] ) ) {
+  $post_id = $_POST['post_id'];
+  $user_id = $_POST['user_id'];
+
+  $create_likes_query = "INSERT INTO likes(user_id, post_id) VALUES($user_id, $post_id)";
+  $create_likes_query_result = query_result( $create_likes_query );
+  exit();
+
+}
+
+if ( isset( $_POST['unliked'] ) ) {
+  $post_id = $_POST['post_id'];
+  $user_id = $_POST['user_id'];
+
+  $delete_likes_query = "DELETE FROM likes WHERE post_id = $post_id and user_id = $user_id";
+  $delete_likes_query_result = query_result( $delete_likes_query );
+  exit();
+
+}
+
+
+
+?>
+
 <!-- Page Content -->
 <div class="container">
 
@@ -56,3 +83,45 @@
   <hr>
 
  <?php include 'includes/footer.php'; ?>
+
+ <script>
+ 
+      $(document).ready(function() {
+        $("[data-toggle='tooltip']").tooltip();
+
+
+        var the_post_id = <?php echo $post_id; ?>;
+        var user_id = <?php echo get_logged_user_id(); ?>
+
+        //Like
+        $('.like').click(function() {
+          $.ajax({
+            url: "/new_cms/posts.php?post_id=<?php echo $post_id; ?>",
+            type: 'post',
+            data: {
+              'liked': 1,
+              'post_id': the_post_id,
+              'user_id': user_id
+              
+            }
+          })
+        });
+
+        //Unlike
+        $('.unlike').click(function() {
+          $.ajax({
+            url: "/new_cms/posts.php?post_id=<?php echo $post_id; ?>",
+            type: 'post',
+            data: {
+              'unliked': 1,
+              'post_id': the_post_id,
+              'user_id': user_id
+              
+            }
+          })
+        });
+
+
+      });
+ 
+ </script>

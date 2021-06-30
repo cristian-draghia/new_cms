@@ -42,9 +42,16 @@
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
-                    <li <?php if ( basename( $_SERVER['PHP_SELF'] )  === 'index.php') echo "class='active'"; ?>>
-                        <a href="/new_cms/admin/"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a>
+                     <li <?php if ( basename( $_SERVER['PHP_SELF'] )  === 'index.php') echo "class='active'"; ?>>
+                        <a href="/new_cms/admin/"><i class="fa fa-tachometer" aria-hidden="true"></i> My Data</a>
                     </li>
+
+                    <?php  if ( is_admin($_SESSION['user_name'] ) ):?>
+                    <li <?php if ( basename( $_SERVER['PHP_SELF'] )  === 'dashboard.php') echo "class='active'"; ?>>
+                        <a href="/new_cms/admin/dashboard"><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard</a>
+                    </li>
+                    <?php endif ?>
+                    
                     <li <?php if ( basename( $_SERVER['PHP_SELF'] )  === 'posts.php') echo "class='active'"; ?>>
                         <a href="javascript:;" data-toggle="collapse" data-target="#posts_dropdown"><i class="fa fa-file-text" aria-hidden="true"></i> Posts <i class="fa fa-caret-down" aria-hidden="true"></i></a>
                         <ul id="posts_dropdown" class="collapse">

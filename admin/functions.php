@@ -19,6 +19,30 @@ function isLoggedIn( $session ) {
   return false;
 }
 
+function get_user_info($user_info) {
+  global $connection;
+  return isset( $_SESSION[$user_info] ) ? $_SESSION[$user_info] : null;
+}
+
+function get_user_name( $user_id ) {
+  global $connection;
+  $get_user_name_query = "SELECT user_name FROM users WHERE user_id = $user_id";
+  $get_user_name_query_result = query_result( $get_user_name_query );
+  $row = mysqli_fetch_array( $get_user_name_query_result );
+  return escape( $row['user_name'] ); 
+}
+function is_admin( $user_name ) {
+  global $connection;
+  if (isLoggedIn('user_role') ) {
+    $is_admin_query = "SELECT user_role FROM users WHERE user_name = '$user_name' ";
+    $is_admin_query_result = query_result( $is_admin_query );
+    $row = mysqli_fetch_assoc( $is_admin_query_result );
+    return ($row['user_role'] === 'administrator' ? true : false); 
+  } else {
+    return redirect('/new_cms/index');
+  }
+}
+
 function checkIfUserIsLoggedInAndRedirect( $redirectLocation =null ) {
   if ( isLoggedIn( 'user_name' ) ) {
     redirect( $redirectLocation );
@@ -74,13 +98,6 @@ function escape_string( $string ) {
   return mysqli_real_escape_string ( $connection, $string );
 }
 
-function is_admin( $user_name ) {
-  global $connection;
-  $is_admin_query = "SELECT user_role FROM users WHERE user_name = '$user_name' ";
-  $is_admin_query_result = query_result( $is_admin_query );
-  $row = mysqli_fetch_assoc( $is_admin_query_result );
-  return ($row['user_role'] === 'administrator' ? true : false); 
-}
 
 function register_user( &$user_name, &$user_email, &$message, &$message_state) {
   global $connection;
@@ -307,12 +324,13 @@ function insert_categories() {
   if( isset( $_POST['submit'] )) {
                       
     $cat_title = escape( $_POST['cat_title'] );
+    $cat_user_id = get_logged_user_id();
 
     if( $cat_title == '' || empty( $cat_title )) {
       echo "This field should not be empy";
     } else {
-      $stmt = mysqli_prepare( $connection, "INSERT INTO categories(cat_title) VALUE (?)");
-      mysqli_stmt_bind_param( $stmt, "s", $cat_title );
+      $stmt = mysqli_prepare( $connection, "INSERT INTO categories(cat_title, cat_user_id) VALUE (?, ?)");
+      mysqli_stmt_bind_param( $stmt, "si", $cat_title, $cat_user_id );
       mysqli_stmt_execute( $stmt );
       if( !$stmt ) {
         die('QUERY FAILED' . mysqli_error( $connection ));
@@ -331,9 +349,12 @@ function find_all_categories() {
   while ( $row = mysqli_fetch_assoc( $select_categories )) {
       $cat_id = escape( $row['cat_id'] );
       $cat_title = escape( $row['cat_title'] );
+      $cat_user_id = escape( $row['cat_user_id'] );
+      $cat_user_name = get_user_name($cat_user_id);
       echo "<tr>";
       echo "<td>{$cat_id}</td>";
       echo "<td>{$cat_title}</td>";
+      echo "<td>{$cat_user_name}</td>";
       if ( $cat_id > 1 ) {
         echo "<td><a href='categories.php?edit={$cat_id}'>EDIT</a></td>"; 
         echo "<td><a href='categories.php?delete={$cat_id}' OnClick=\"return confirm( 'Are you sure you want to delete this category?' );\">DELETE</a></td>";
@@ -743,9 +764,9 @@ function display_authors( $selected_user_id ) {
   }
 }
 
-function display_graph( &$var_array, $graph ) {
+function display_graph( &$var_array, $graph, $current_user = null, $number = 3 ) {
   global $connection;
-  echo "<div class='col-lg-3 col-md-6'>";
+  echo "<div class='col-lg-$number col-md-6'>";
   if ( $graph === 'Posts') {
     echo "<div class='panel panel-primary'>";
   } elseif ( $graph === 'Comments' ) {
@@ -774,7 +795,7 @@ function display_graph( &$var_array, $graph ) {
           </div>
           <div class="col-xs-9 text-right">
           <?php
-            $post_results = select_graph( $graph );
+            $post_results = select_graph( $graph, $current_user );
             foreach ( $post_results as $post) {
               array_push($var_array, $post );
             }
@@ -784,7 +805,17 @@ function display_graph( &$var_array, $graph ) {
           </div>
         </div>
       </div>
-      <a href="posts.php">
+      <?php 
+        if ( $graph === 'Posts') {
+          echo "<a href='/new_cms/admin/posts'>";
+        } elseif ( $graph === 'Comments' ) {
+          echo "<a href='/new_cms/admin/comments'>";
+        } elseif ( $graph === 'Users' ) {
+          echo "<a href='/new_cms/admin/users'>";
+        } elseif ( $graph === 'Categories' ) {
+          echo "<a href='/new_cms/admin/categories'>";
+        }
+      ?>
         <div class="panel-footer">
           <span class="pull-left">View Details</span>
           <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -796,12 +827,16 @@ function display_graph( &$var_array, $graph ) {
 <?php  
 }
 
-function select_graph( $graph ) {
+function select_graph( $graph, $current_user = null ) {
   global $connection;
   switch ($graph) {
     case 'Posts': {
         //Count how many posts
-        $posts_count_query = "SELECT * FROM posts";
+        if ( $current_user == null) {
+          $posts_count_query = "SELECT * FROM posts";
+        } else {
+          $posts_count_query = "SELECT * FROM posts WHERE post_author_id = $current_user";
+        }
         $posts_count_query_result = mysqli_query( $connection, $posts_count_query );
         confirm_query( $posts_count_query_result );
         $posts_count = mysqli_num_rows( $posts_count_query_result );
@@ -821,7 +856,11 @@ function select_graph( $graph ) {
 
     case 'Comments': {
       //Count how many comments
-      $coments_count_query = "SELECT * FROM comments";
+      if ( $current_user == null) {
+        $coments_count_query = "SELECT * FROM comments";
+      } else {
+        $coments_count_query = "SELECT * FROM comments WHERE comment_email = '$current_user'";
+      }
       $coments_count_query_result = mysqli_query( $connection, $coments_count_query );
       confirm_query( $coments_count_query_result );
       $coments_count = mysqli_num_rows( $coments_count_query_result );
@@ -860,7 +899,11 @@ function select_graph( $graph ) {
 
     case 'Categories': {
       //Count how many categories
-      $categories_count_query = "SELECT * FROM categories";
+      if ( $current_user == null) {
+        $categories_count_query = "SELECT * FROM categories";
+      } else {
+        $categories_count_query = "SELECT * FROM categories WHERE cat_user_id = $current_user";
+      }
       $categories_count_query_result = mysqli_query( $connection, $categories_count_query );
       confirm_query( $categories_count_query_result );
       $categories_count = mysqli_num_rows( $categories_count_query_result );

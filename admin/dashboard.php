@@ -14,7 +14,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Welcome to the Admin Dashboard 
+                            Welcome to your Dashboard 
                             <small><?php echo get_user_info('user_name'); ?></small>
                         </h1>
             
@@ -26,9 +26,10 @@
                     <!-- Here ---->
                     <?php 
                     $var_array = array();
-                    display_graph( $var_array, "Posts", $_SESSION['user_id'], "4" );
-                    display_graph( $var_array, "Comments", $_SESSION['user_email'], "4" );
-                    display_graph( $var_array, "Categories", $_SESSION['user_id'], "4" );
+                    display_graph( $var_array, "Posts" );
+                    display_graph( $var_array, "Comments" );
+                    display_graph( $var_array, "Users" );
+                    display_graph( $var_array, "Categories" );
                     ?>
                 </div>
                 <!-- /.row -->
@@ -52,6 +53,8 @@
                             'Draft Posts',
                             'Approved Comments',
                             'Unapproved Comments',
+                            'Admin Users',
+                            'Subscriber Users',
                         );
 
                         $chart_element_count = array(
@@ -59,6 +62,8 @@
                             $var_array[2],
                             $var_array[4],
                             $var_array[5],
+                            $var_array[7],
+                            $var_array[8],
                         ) ;
 
                         for( $i = 0; $i < sizeof( $chart_element_count ); $i++) {

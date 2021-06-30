@@ -54,6 +54,7 @@
                           <tr>
                             <th>Id</th>
                             <th>Category Title</th>
+                            <th>Category Author</th>
                             <th>Edit</th>
                             <th>Delete</th>
                           </tr>

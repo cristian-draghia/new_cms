@@ -173,20 +173,20 @@ function register_user_form( $user_name, $user_email, $message, $message_state) 
   }
   ?>
   <div class="form-group">
-    <input type="text" name="user_name" id="username" class="form-control" placeholder="Username" 
+    <input type="text" name="user_name" id="username" class="form-control" placeholder="<?php echo _USERNAME; ?>"
     autocomplete="on" value="<?php echo ( isset( $user_name) ? $user_name : '') ?>">
   </div>
   <div class="form-group">
-    <input type="email" name="user_email" id="email" class="form-control" placeholder="Email" 
+    <input type="email" name="user_email" id="email" class="form-control" placeholder="<?php echo _EMAIL; ?>" 
     autocomplete="on" value="<?php echo ( isset( $user_email) ? $user_email : '') ?>">
   </div>
   <div class="form-group">
-    <input type="password" name="user_password" id="password" class="form-control" placeholder="Password">
+    <input type="password" name="user_password" id="password" class="form-control" placeholder="<?php echo _PASSWORD; ?>">
   </div>
   <div class="form-group">
-    <input type="password" name="user_password_confirm" id="password_confirm" class="form-control" placeholder="Confirm Password">
+    <input type="password" name="user_password_confirm" id="password_confirm" class="form-control" placeholder="<?php echo _CONFIRM_PASSWORD; ?>">
   </div>
-  <input type="submit" name="register" id="btn-login" class="btn btn-custom btn-lg btn-block register-btn" value="Register">
+  <input type="submit" name="register" id="btn-login" class="btn btn-custom btn-lg btn-block register-btn" value="<?php echo _REGISTER; ?>">
 </form>
 
 <?php
